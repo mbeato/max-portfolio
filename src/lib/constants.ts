@@ -6,9 +6,9 @@ export const SITE_CONFIG = {
   title: "Maximus Beato - Portfolio",
   description: "Modern portfolio website showcasing innovative projects and technical expertise in full-stack development.",
   url: "https://maximusbeato.com",
-  email: "contact@maximusbeato.com", // Replace with actual email
-  location: "Your Location", // Replace with actual location
-  timezone: "America/New_York", // Replace with actual timezone
+  email: "maximus.beato@gmail.com",
+  location: "West Lafayette, IN", // Replace with actual location
+  timezone: "America/New_York", // East Coast (US Eastern Time)
 } as const
 
 // Navigation items
@@ -22,6 +22,11 @@ export const NAVIGATION: NavItem[] = [
     id: "nav-about", 
     label: "About",
     href: "#about"
+  },
+  {
+    id: "nav-experience",
+    label: "Experience", 
+    href: "#experience"
   },
   {
     id: "nav-projects",
@@ -40,23 +45,16 @@ export const SOCIAL_LINKS: SocialLink[] = [
   {
     id: "social-github",
     name: "GitHub",
-    url: "https://github.com/maximusbeato", // Replace with actual
+    url: "https://github.com/mbeato",
     icon: "Github",
     color: "#333"
   },
   {
     id: "social-linkedin", 
     name: "LinkedIn",
-    url: "https://linkedin.com/in/maximusbeato", // Replace with actual
+    url: "https://linkedin.com/in/maximus-beato",
     icon: "Linkedin",
     color: "#0077B5"
-  },
-  {
-    id: "social-twitter",
-    name: "Twitter",
-    url: "https://twitter.com/maximusbeato", // Replace with actual
-    icon: "Twitter", 
-    color: "#1DA1F2"
   },
   {
     id: "social-email",
@@ -69,28 +67,35 @@ export const SOCIAL_LINKS: SocialLink[] = [
 
 // Skills categories and data
 export const SKILL_CATEGORIES = {
-  frontend: {
-    name: "Frontend",
+  languages: {
+    name: "Languages",
     color: "#61DAFB",
     skills: [
-      "React", "Next.js", "TypeScript", "JavaScript", "HTML5", "CSS3", 
-      "Tailwind CSS", "Framer Motion", "Three.js", "Vue.js"
+      "TypeScript", "JavaScript", "Python", "C/C++", "SQL", "R"
     ]
   },
-  backend: {
-    name: "Backend", 
+  frameworks: {
+    name: "Frameworks & Libraries", 
     color: "#339933",
     skills: [
-      "Node.js", "Express.js", "Python", "PostgreSQL", "MongoDB",
-      "REST APIs", "GraphQL", "Prisma", "Supabase", "Firebase"
+      "React", "Next.js", "NestJS", "Django REST Framework", "Node.js", 
+      "GraphQL", "MUI", "NextAuth"
+    ]
+  },
+  cloud: {
+    name: "Cloud & Services",
+    color: "#FF9500",
+    skills: [
+      "AWS Cognito", "AWS Lambda", "AWS KMS", "AWS Encryption SDK",
+      "Stripe", "SendGrid"
     ]
   },
   tools: {
-    name: "Tools & Technologies",
+    name: "Tools & Databases",
     color: "#FF6B6B", 
     skills: [
-      "Git", "Docker", "AWS", "Vercel", "Figma", "VS Code",
-      "Linux", "CI/CD", "Jest", "Cypress"
+      "Prisma", "PostgreSQL", "Docker", "Git", "CI/CD", 
+      "Azure Data Studio", "Tableau", "Valgrind"
     ]
   }
 } as const

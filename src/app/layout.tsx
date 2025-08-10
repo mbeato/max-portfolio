@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://maximusbeato.com'),
   title: {
     default: "Maximus Beato - Portfolio",
     template: "%s | Maximus Beato"

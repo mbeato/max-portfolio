@@ -25,76 +25,183 @@ function Earth() {
     cloudsRef.current.rotation.x = Math.sin(time * 0.1) * 0.05
   })
 
-  // Create earth texture using gradients (in a real project, you'd use actual earth textures)
+  // Create realistic Earth texture
   const earthMaterial = useMemo(() => {
     const canvas = document.createElement('canvas')
-    canvas.width = 1024
-    canvas.height = 512
+    canvas.width = 2048
+    canvas.height = 1024
     const context = canvas.getContext('2d')!
     
-    // Create a simple earth-like pattern
-    const gradient = context.createLinearGradient(0, 0, 1024, 512)
-    gradient.addColorStop(0, '#2E8B57')    // Sea green
-    gradient.addColorStop(0.3, '#228B22')  // Forest green
-    gradient.addColorStop(0.6, '#8FBC8F')  // Dark sea green
-    gradient.addColorStop(1, '#4682B4')    // Steel blue
+    // Create ocean base (deep blue)
+    context.fillStyle = '#1e3a8a' // Deep blue ocean
+    context.fillRect(0, 0, 2048, 1024)
     
-    context.fillStyle = gradient
-    context.fillRect(0, 0, 1024, 512)
+    // Add depth variation to oceans
+    const oceanGradient = context.createRadialGradient(1024, 512, 0, 1024, 512, 800)
+    oceanGradient.addColorStop(0, '#2563eb') // Lighter blue
+    oceanGradient.addColorStop(0.7, '#1e3a8a') // Deep blue
+    oceanGradient.addColorStop(1, '#1e1b4b')   // Very deep blue
+    context.fillStyle = oceanGradient
+    context.fillRect(0, 0, 2048, 1024)
     
-    // Add some brown/tan patches for continents
-    context.fillStyle = '#CD853F'
-    for (let i = 0; i < 20; i++) {
-      const x = Math.random() * 1024
-      const y = Math.random() * 512
-      const radius = Math.random() * 100 + 50
+    // Create more realistic continent shapes
+    const continents = [
+      // Africa-like continent
+      { x: 1024, y: 400, width: 300, height: 400, color: '#22c55e' },
+      // Europe-like continent
+      { x: 1024, y: 250, width: 200, height: 150, color: '#16a34a' },
+      // Asia-like continent
+      { x: 1200, y: 300, width: 400, height: 300, color: '#15803d' },
+      // North America-like continent
+      { x: 600, y: 250, width: 250, height: 350, color: '#166534' },
+      // South America-like continent
+      { x: 700, y: 500, width: 150, height: 300, color: '#14532d' },
+      // Australia-like continent
+      { x: 1500, y: 650, width: 200, height: 120, color: '#365314' },
+    ]
+    
+    // Draw continents with more natural shapes
+    continents.forEach(continent => {
+      context.fillStyle = continent.color
+      
+      // Create irregular continent shape
       context.beginPath()
-      context.arc(x, y, radius, 0, Math.PI * 2)
+      const centerX = continent.x
+      const centerY = continent.y
+      const radiusX = continent.width / 2
+      const radiusY = continent.height / 2
+      
+      // Create organic, continent-like shape
+      for (let angle = 0; angle < Math.PI * 2; angle += 0.1) {
+        const noise = Math.sin(angle * 8) * 0.2 + Math.sin(angle * 3) * 0.3
+        const radius = (1 + noise) * (radiusX + radiusY) / 2
+        const x = centerX + Math.cos(angle) * radius * (radiusX / ((radiusX + radiusY) / 2))
+        const y = centerY + Math.sin(angle) * radius * (radiusY / ((radiusX + radiusY) / 2))
+        
+        if (angle === 0) {
+          context.moveTo(x, y)
+        } else {
+          context.lineTo(x, y)
+        }
+      }
+      context.closePath()
       context.fill()
-    }
+      
+      // Add some inland details (mountains/forests)
+      context.fillStyle = '#166534' // Darker green for terrain variation
+      for (let i = 0; i < 15; i++) {
+        const detailX = centerX + (Math.random() - 0.5) * radiusX * 1.5
+        const detailY = centerY + (Math.random() - 0.5) * radiusY * 1.5
+        const detailRadius = Math.random() * 20 + 10
+        
+        context.beginPath()
+        context.arc(detailX, detailY, detailRadius, 0, Math.PI * 2)
+        context.fill()
+      }
+    })
+    
+    // Add ice caps (polar regions)
+    // North pole
+    context.fillStyle = '#f8fafc' // White/light blue for ice
+    context.beginPath()
+    context.ellipse(1024, 50, 800, 100, 0, 0, Math.PI * 2)
+    context.fill()
+    
+    // South pole
+    context.beginPath()
+    context.ellipse(1024, 974, 600, 80, 0, 0, Math.PI * 2)
+    context.fill()
     
     const texture = new THREE.CanvasTexture(canvas)
     texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
+    texture.wrapT = THREE.ClampToEdgeWrapping
     
-    return new THREE.MeshLambertMaterial({ 
+    return new THREE.MeshPhongMaterial({ 
       map: texture,
+      shininess: 1,
       transparent: false
     })
   }, [])
 
-  // Create clouds texture
+  // Create more realistic clouds texture
   const cloudsMaterial = useMemo(() => {
     const canvas = document.createElement('canvas')
-    canvas.width = 1024
-    canvas.height = 512
+    canvas.width = 2048
+    canvas.height = 1024
     const context = canvas.getContext('2d')!
     
-    // Create cloud pattern
-    context.fillStyle = 'rgba(255, 255, 255, 0)'
-    context.fillRect(0, 0, 1024, 512)
+    // Create transparent base
+    context.fillStyle = 'rgba(0, 0, 0, 0)'
+    context.fillRect(0, 0, 2048, 1024)
     
-    // Add white clouds
-    for (let i = 0; i < 50; i++) {
-      const x = Math.random() * 1024
-      const y = Math.random() * 512
-      const radius = Math.random() * 60 + 20
-      const opacity = Math.random() * 0.8 + 0.2
+    // Create cloud formations with varying density
+    const cloudFormations = [
+      // Tropical band clouds
+      { y: 300, width: 2048, height: 100, density: 0.6 },
+      { y: 600, width: 2048, height: 80, density: 0.5 },
+      // Polar clouds
+      { y: 50, width: 2048, height: 120, density: 0.8 },
+      { y: 900, width: 2048, height: 100, density: 0.7 },
+      // Random weather systems
+      { x: 400, y: 200, width: 300, height: 200, density: 0.7 },
+      { x: 1200, y: 400, width: 400, height: 150, density: 0.6 },
+      { x: 1600, y: 700, width: 250, height: 180, density: 0.5 },
+    ]
+    
+    cloudFormations.forEach(formation => {
+      const cloudCount = Math.floor((formation.width || 400) * (formation.height || 200) / 5000)
       
-      context.fillStyle = `rgba(255, 255, 255, ${opacity})`
+      for (let i = 0; i < cloudCount; i++) {
+        const x = (formation.x || 0) + Math.random() * (formation.width || 2048)
+        const y = formation.y + Math.random() * formation.height
+        const radius = Math.random() * 80 + 30
+        const opacity = formation.density * (Math.random() * 0.6 + 0.4)
+        
+        // Create fluffy cloud shape
+        context.fillStyle = `rgba(255, 255, 255, ${opacity})`
+        context.beginPath()
+        
+        // Main cloud body
+        context.arc(x, y, radius, 0, Math.PI * 2)
+        context.fill()
+        
+        // Add smaller puffs around main body
+        for (let j = 0; j < 4; j++) {
+          const puffX = x + (Math.random() - 0.5) * radius * 1.5
+          const puffY = y + (Math.random() - 0.5) * radius * 1.5
+          const puffRadius = radius * (Math.random() * 0.5 + 0.3)
+          const puffOpacity = opacity * (Math.random() * 0.7 + 0.3)
+          
+          context.fillStyle = `rgba(255, 255, 255, ${puffOpacity})`
+          context.beginPath()
+          context.arc(puffX, puffY, puffRadius, 0, Math.PI * 2)
+          context.fill()
+        }
+      }
+    })
+    
+    // Add some wispy high-altitude clouds
+    context.fillStyle = 'rgba(255, 255, 255, 0.2)'
+    for (let i = 0; i < 30; i++) {
+      const x = Math.random() * 2048
+      const y = Math.random() * 1024
+      const width = Math.random() * 200 + 100
+      const height = Math.random() * 20 + 10
+      
       context.beginPath()
-      context.arc(x, y, radius, 0, Math.PI * 2)
+      context.ellipse(x, y, width, height, Math.random() * Math.PI, 0, Math.PI * 2)
       context.fill()
     }
     
     const texture = new THREE.CanvasTexture(canvas)
     texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
+    texture.wrapT = THREE.ClampToEdgeWrapping
     
     return new THREE.MeshLambertMaterial({ 
       map: texture,
       transparent: true,
-      opacity: 0.4
+      opacity: 0.6,
+      alphaTest: 0.1
     })
   }, [])
 
@@ -211,13 +318,24 @@ export default function EarthModel({ id }: EarthModelProps) {
     <div id={id} className="w-full h-96 relative">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 45 }}
-        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
-        dpr={[1, 1.5]}
-        frameloop="demand"
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 2]}
+        frameloop="always"
       >
-        {/* Simplified lighting for performance */}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        {/* Realistic lighting setup */}
+        <ambientLight intensity={0.2} />
+        <directionalLight 
+          position={[10, 10, 5]} 
+          intensity={1.2}
+          color="#ffffff"
+          castShadow
+        />
+        {/* Subtle fill light from opposite side */}
+        <directionalLight 
+          position={[-5, -5, -2]} 
+          intensity={0.3}
+          color="#4a90e2"
+        />
 
         {/* Background stars */}
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
@@ -238,13 +356,6 @@ export default function EarthModel({ id }: EarthModelProps) {
         />
       </Canvas>
 
-      {/* Overlay information */}
-      <div className="absolute bottom-4 left-4 text-white text-sm bg-black/50 rounded px-3 py-1">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-          <span>Earth - Interactive 3D Model</span>
-        </div>
-      </div>
     </div>
   )
 }

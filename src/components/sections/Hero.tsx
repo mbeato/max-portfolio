@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
+import InteractiveGraphics from '@/components/3d/InteractiveGraphics'
 import Button from '@/components/ui/Button'
-import Lazy3DComponent from '@/components/ui/Lazy3DComponent'
 import { SITE_CONFIG, SOCIAL_LINKS } from '@/lib/constants'
 import { fadeInUp, staggerContainer, generateElementId } from '@/lib/utils'
 
@@ -103,11 +103,12 @@ export default function Hero({ id }: HeroProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
 
-      {/* 3D Floating Shapes - Lazy Loaded */}
-      <Lazy3DComponent
-        componentName="FloatingShapes"
-        id={generateElementId('hero', '3d', 'floating-shapes')} 
+      {/* Interactive Graphics Layer */}
+      <InteractiveGraphics
+        id={generateElementId('hero', 'graphics', 'interactive')}
+        className="z-10"
       />
+
 
       <div 
         id={generateElementId('hero', 'content', 'container')}
@@ -156,7 +157,7 @@ export default function Hero({ id }: HeroProps) {
             className="mb-8"
           >
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400">
-              Full-Stack Developer & Creative Technologist
+              Full‑Stack Developer @ Purdue University
             </p>
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-500 mt-2">
               Building innovative digital experiences with modern technologies

@@ -16,7 +16,7 @@ export function useIntersectionObserver({
   freezeOnceVisible = false,
   triggerOnce = true
 }: UseIntersectionObserverOptions = {}): UseIntersectionObserverResult {
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>
   const [isIntersecting, setIsIntersecting] = useState(false)
   const [hasIntersected, setHasIntersected] = useState(false)
 

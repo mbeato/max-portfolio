@@ -1,16 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Github, ExternalLink, Calendar, Search, Filter, Eye, Star, GitFork } from 'lucide-react'
+import { Github, ExternalLink, Calendar, Search, Filter, Eye, Star, GitFork, RefreshCw, AlertCircle } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import ProjectModal from '@/components/ui/ProjectModal'
-import { PROJECT_CATEGORIES } from '@/lib/constants'
-import { PROJECTS, getProjectsByCategory, searchProjects, getProjectStats } from '@/lib/projects'
+import { useGitHubProjects } from '@/hooks/useGitHubProjects'
 import { fadeInUp, staggerContainer, generateElementId } from '@/lib/utils'
 import { useScrollAnimation } from '@/hooks/useIntersectionObserver'
-import type { Project } from '@/lib/types'
+import type { ProjectData } from '@/lib/github'
 
 interface ProjectsProps {
   id: string
@@ -18,45 +16,43 @@ interface ProjectsProps {
 
 export default function Projects({ id }: ProjectsProps) {
   const { ref, isIntersecting } = useScrollAnimation()
+  const { projects, loading, error, stats, refetch } = useGitHubProjects()
   const [activeFilter, setActiveFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredProjects, setFilteredProjects] = useState(PROJECTS)
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [showModal, setShowModal] = useState(false)
 
-  const stats = getProjectStats()
-
-  const handleFilterChange = (filter: string) => {
-    setActiveFilter(filter)
-    applyFilters(filter, searchQuery)
-  }
-
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query)
-    applyFilters(activeFilter, query)
-  }
-
-  const applyFilters = (filter: string, search: string) => {
-    let projects = filter === 'all' ? PROJECTS : getProjectsByCategory(filter)
+  // Filter and search projects
+  const filteredProjects = useMemo(() => {
+    let filtered = projects
     
-    if (search.trim()) {
-      projects = searchProjects(search).filter(project => 
-        filter === 'all' || project.category === filter
+    // Apply category filter
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(project => project.category === activeFilter)
+    }
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(project => 
+        project.title.toLowerCase().includes(query) ||
+        project.description.toLowerCase().includes(query) ||
+        project.technologies.some(tech => tech.toLowerCase().includes(query))
       )
     }
     
-    setFilteredProjects(projects)
-  }
+    return filtered
+  }, [projects, activeFilter, searchQuery])
 
-  const handleProjectClick = (project: Project) => {
-    setSelectedProject(project)
-    setShowModal(true)
-  }
-
-  const handleCloseModal = () => {
-    setShowModal(false)
-    setTimeout(() => setSelectedProject(null), 300) // Delay to allow animation
-  }
+  // Available categories from GitHub projects
+  const availableCategories = useMemo(() => {
+    const categories = Array.from(new Set(projects.map(p => p.category)))
+    return [
+      { id: 'all', label: 'All Projects' },
+      ...categories.map(cat => ({
+        id: cat,
+        label: cat.charAt(0).toUpperCase() + cat.slice(1)
+      }))
+    ]
+  }, [projects])
 
   return (
     <section 
@@ -87,41 +83,64 @@ export default function Projects({ id }: ProjectsProps) {
               UI/UX design, and modern web technologies
             </p>
             
-            {/* Project Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mb-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {stats.total}
+            {/* GitHub Integration Status & Stats */}
+            {loading ? (
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
+                <span className="text-gray-600 dark:text-gray-400">Loading projects from GitHub...</span>
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center gap-4 mb-8">
+                <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>Failed to load GitHub projects</span>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Total Projects
+                <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={refetch}
+                  leftIcon={<RefreshCw className="w-4 h-4" />}
+                >
+                  Retry
+                </Button>
+              </div>
+            ) : stats ? (
+              <div className="flex flex-wrap justify-center gap-6 mb-8">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {stats.total}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Repositories
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {stats.totalStars}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    GitHub Stars
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {stats.totalForks}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Total Forks
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                    {stats.technologies}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Technologies
+                  </div>
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  {stats.completed}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Completed
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                  {stats.totalStars}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  GitHub Stars
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                  {stats.totalViews.toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Total Views
-                </div>
-              </div>
-            </div>
+            ) : null}
           </motion.div>
 
           {/* Search and Filter Controls */}
@@ -146,38 +165,40 @@ export default function Projects({ id }: ProjectsProps) {
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <Filter className="w-4 h-4" />
                 <span>
-                  Showing {filteredProjects.length} of {stats.total} projects
+                  Showing {filteredProjects.length} of {stats?.total || 0} projects
                 </span>
               </div>
             </div>
           </motion.div>
 
-          {/* Filter Buttons */}
-          <motion.div
-            id={generateElementId('projects', 'filters', 'container')}
-            variants={fadeInUp}
-            className="flex flex-wrap justify-center gap-4 mb-12"
-          >
-            {PROJECT_CATEGORIES.map((category, index) => (
-              <motion.button
-                key={category.id}
-                id={generateElementId('projects', 'filter', category.id)}
-                onClick={() => handleFilterChange(category.id)}
-                className={`px-6 py-2 rounded-full font-medium transition-all ${
-                  activeFilter === category.id
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.2 + index * 0.1 }}
-              >
-                {category.label}
-              </motion.button>
-            ))}
-          </motion.div>
+          {/* Dynamic Filter Buttons from GitHub */}
+          {!loading && !error && (
+            <motion.div
+              id={generateElementId('projects', 'filters', 'container')}
+              variants={fadeInUp}
+              className="flex flex-wrap justify-center gap-4 mb-12"
+            >
+              {availableCategories.map((category, index) => (
+                <motion.button
+                  key={category.id}
+                  id={generateElementId('projects', 'filter', category.id)}
+                  onClick={() => setActiveFilter(category.id)}
+                  className={`px-6 py-2 rounded-full font-medium transition-all ${
+                    activeFilter === category.id
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                >
+                  {category.label}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
 
           {/* Projects Grid */}
           <motion.div
@@ -200,7 +221,7 @@ export default function Projects({ id }: ProjectsProps) {
                   variant="elevated"
                   padding="none"
                   className="h-full group hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
-                  onClick={() => handleProjectClick(project)}
+                  onClick={() => window.open(project.links.github, '_blank')}
                   asMotion
                   motionProps={{
                     whileHover: { scale: 1.02 },
@@ -225,7 +246,7 @@ export default function Projects({ id }: ProjectsProps) {
                           ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400'
                           : 'bg-gray-100 dark:bg-gray-900/20 text-gray-700 dark:text-gray-400'
                       }`}>
-                        {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                        {project.status === 'in-progress' ? 'Active' : 'Completed'}
                       </div>
                       
                       {project.featured && (
@@ -280,7 +301,7 @@ export default function Projects({ id }: ProjectsProps) {
                       
                       <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
                         <Calendar className="w-3 h-3" />
-                        <span>{new Date(project.createdDate).getFullYear()}</span>
+                        <span>Updated {new Date(project.updatedDate).toLocaleDateString()}</span>
                       </div>
                     </div>
 
@@ -371,7 +392,6 @@ export default function Projects({ id }: ProjectsProps) {
                 onClick={() => {
                   setSearchQuery('')
                   setActiveFilter('all')
-                  setFilteredProjects(PROJECTS)
                 }}
               >
                 Show All Projects
@@ -400,7 +420,7 @@ export default function Projects({ id }: ProjectsProps) {
                     variant="primary"
                     size="lg"
                     leftIcon={<Github className="w-5 h-5" />}
-                    onClick={() => window.open('https://github.com/maximusbeato', '_blank')}
+                    onClick={() => window.open('https://github.com/mbeato', '_blank')}
                     asMotion
                     motionProps={{
                       whileHover: { scale: 1.05 },
@@ -435,13 +455,6 @@ export default function Projects({ id }: ProjectsProps) {
         </motion.div>
       </div>
       
-      {/* Project Detail Modal */}
-      <ProjectModal
-        id={generateElementId('projects', 'modal', 'detail')}
-        project={selectedProject}
-        isOpen={showModal}
-        onClose={handleCloseModal}
-      />
     </section>
   )
 }

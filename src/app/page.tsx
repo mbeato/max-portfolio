@@ -1,6 +1,7 @@
 import Navigation from '@/components/sections/Navigation'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
+import Experience from '@/components/sections/Experience'
 import Projects from '@/components/sections/Projects'
 import Contact from '@/components/sections/Contact'
 import ScrollProgress from '@/components/ui/ScrollProgress'
@@ -17,6 +18,7 @@ export default function Home() {
           <Navigation id="portfolio-navigation" />
           <Hero id="portfolio-hero-section" />
           <About id="portfolio-about-section" />
+          <Experience id="portfolio-experience-section" />
           <Projects id="portfolio-projects-section" />
           <Contact id="portfolio-contact-section" />
           <AccessibilityMenu id="portfolio-accessibility-menu" />

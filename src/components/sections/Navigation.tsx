@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import ThemeToggle from '@/components/ui/ThemeToggle'
+import { Menu, X, Download } from 'lucide-react'
 import { NAVIGATION, SITE_CONFIG } from '@/lib/constants'
 import { cn, generateElementId } from '@/lib/utils'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
@@ -13,11 +12,10 @@ interface NavigationProps {
 }
 
 export default function Navigation({ id }: NavigationProps) {
-  const { scrollDirection, scrollY } = useScrollProgress()
+  const { scrollY } = useScrollProgress()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   const isScrolled = scrollY > 50
-  const shouldHideNav = scrollDirection === 'down' && scrollY > 200 && !isMobileMenuOpen
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false)
@@ -31,23 +29,18 @@ export default function Navigation({ id }: NavigationProps) {
   }
 
   return (
-    <motion.header
+    <header
       id={id}
-      initial={{ y: -100 }}
-      animate={{ 
-        y: shouldHideNav ? -100 : 0
-      }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-1 left-0 right-0 z-40 transition-all duration-500 ease-out',
         isScrolled 
-          ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm' 
+          ? 'bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-blue-800/30' 
           : 'bg-transparent'
       )}
     >
       <nav 
         id={generateElementId('navigation', 'container', 'main')}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4"
       >
         <div 
           id={generateElementId('navigation', 'content', 'wrapper')}
@@ -62,7 +55,7 @@ export default function Navigation({ id }: NavigationProps) {
             <button
               id={generateElementId('navigation', 'logo', 'button')}
               onClick={() => handleNavClick('#hero')}
-              className="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-2xl font-bold text-white hover:text-blue-400 transition-colors"
             >
               {SITE_CONFIG.name.split(' ').map((word, index) => (
                 <span key={index}>
@@ -75,14 +68,14 @@ export default function Navigation({ id }: NavigationProps) {
           {/* Desktop Navigation */}
           <div 
             id={generateElementId('navigation', 'desktop', 'menu')}
-            className="hidden md:flex items-center space-x-8"
+            className="hidden md:flex items-center space-x-4"
           >
             {NAVIGATION.map((item, index) => (
               <motion.button
                 key={item.id}
                 id={item.id}
                 onClick={() => handleNavClick(item.href)}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+                className="text-gray-300 hover:text-blue-400 font-medium transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: -20 }}
@@ -93,24 +86,38 @@ export default function Navigation({ id }: NavigationProps) {
               </motion.button>
             ))}
             
-            <ThemeToggle 
-              id={generateElementId('navigation', 'theme', 'toggle')}
-              className="ml-4"
-            />
+            {/* Resume Download Button */}
+            <motion.button
+              id={generateElementId('navigation', 'resume', 'download')}
+              onClick={() => {
+                const link = document.createElement('a')
+                link.href = '/resume.pdf'
+                link.download = 'Maximus_Beato_Resume.pdf'
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Download className="w-4 h-4" />
+              Resume
+            </motion.button>
           </div>
 
           {/* Mobile Menu Button */}
           <div 
             id={generateElementId('navigation', 'mobile', 'controls')}
-            className="flex items-center space-x-4 md:hidden"
+            className="flex items-center md:hidden"
           >
-            <ThemeToggle 
-              id={generateElementId('navigation', 'theme', 'toggle-mobile')}
-            />
             <motion.button
               id={generateElementId('navigation', 'mobile', 'menu-button')}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              className="text-gray-300 hover:text-blue-400"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -131,7 +138,7 @@ export default function Navigation({ id }: NavigationProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-700"
+              className="md:hidden bg-slate-900 border-t border-blue-800/30"
             >
               <div 
                 id={generateElementId('navigation', 'mobile', 'menu-content')}
@@ -142,7 +149,7 @@ export default function Navigation({ id }: NavigationProps) {
                     key={`mobile-${item.id}`}
                     id={`mobile-${item.id}`}
                     onClick={() => handleNavClick(item.href)}
-                    className="block w-full text-left text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium py-2"
+                    className="block w-full text-left text-gray-300 hover:text-blue-400 font-medium py-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -151,11 +158,34 @@ export default function Navigation({ id }: NavigationProps) {
                     {item.label}
                   </motion.button>
                 ))}
+                
+                {/* Mobile Resume Download Button */}
+                <motion.button
+                  id={generateElementId('navigation', 'mobile', 'resume-download')}
+                  onClick={() => {
+                    const link = document.createElement('a')
+                    link.href = '/resume.pdf'
+                    link.download = 'Maximus_Beato_Resume.pdf'
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                    setIsMobileMenuOpen(false)
+                  }}
+                  className="flex items-center gap-2 w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors mt-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: NAVIGATION.length * 0.1 }}
+                  whileHover={{ x: 10 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Download className="w-4 h-4" />
+                  Download Resume
+                </motion.button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
-    </motion.header>
+    </header>
   )
 }

@@ -1,12 +1,13 @@
 'use client'
 
-import { useRef, useMemo, useState, useCallback } from 'react'
+import { useRef, useMemo, useState, useCallback, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Float, Text, Html } from '@react-three/drei'
 import { Vector3 } from 'three'
 import * as THREE from 'three'
 import { generateElementId } from '@/lib/utils'
 import { SKILL_CATEGORIES } from '@/lib/constants'
+import ErrorBoundary3D from './ErrorBoundary3D'
 
 interface SkillBubbleProps {
   skill: string
@@ -46,15 +47,10 @@ function SkillBubble({ skill, position, color, category, size, onClick }: SkillB
 
   const sphereGeometry = useMemo(() => new THREE.SphereGeometry(size, 8, 8), [size]) // Reduced resolution
   const material = useMemo(() => 
-    new THREE.MeshPhysicalMaterial({
+    new THREE.MeshLambertMaterial({
       color,
       transparent: true,
-      opacity: hovered ? 0.9 : 0.7,
-      roughness: 0.1,
-      metalness: 0.1,
-      clearcoat: 1,
-      clearcoatRoughness: 0.1,
-      envMapIntensity: 0.5
+      opacity: hovered ? 0.9 : 0.7
     }), [color, hovered]
   )
 
@@ -70,32 +66,33 @@ function SkillBubble({ skill, position, color, category, size, onClick }: SkillB
         onPointerOut={() => setHovered(false)}
         // Removed shadows for better performance
       >
-        {/* Skill label */}
-        <Html
-          transform
-          occlude="blending"
-          position={[0, 0, size + 0.1]}
-          style={{
-            pointerEvents: 'none',
-            userSelect: 'none'
-          }}
-        >
-          <div className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-lg text-xs font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity">
-            {skill}
-          </div>
-        </Html>
+        {/* Skill label - Only show on hover to improve performance */}
+        {hovered && (
+          <Html
+            transform
+            occlude="blending"
+            position={[0, 0, size + 0.2]}
+            style={{
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }}
+          >
+            <div className="bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-lg text-xs font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">
+              {skill}
+            </div>
+          </Html>
+        )}
         
-        {/* Inner text on sphere */}
+        {/* Inner text on sphere - Simplified for performance */}
         <Text
           position={[0, 0, size * 0.8]}
-          fontSize={size * 0.3}
+          fontSize={size * 0.25}
           color="#ffffff"
           anchorX="center"
           anchorY="middle"
-          outlineColor="#000000"
-          outlineWidth={size * 0.01}
+          outlineWidth={0}
         >
-          {skill.slice(0, 3)}
+          {skill.length > 8 ? skill.slice(0, 3).toUpperCase() : skill.slice(0, 4).toUpperCase()}
         </Text>
       </mesh>
     </Float>
@@ -154,15 +151,27 @@ export default function SkillBubbles({ id, onSkillClick }: SkillBubblesProps) {
   }, [skillBubbles, onSkillClick])
 
   return (
-    <div 
-      id={id}
-      className="w-full h-96 relative"
-    >
+    <ErrorBoundary3D>
+      <div 
+        id={id}
+        className="w-full h-96 relative"
+      >
       <Canvas
         camera={{ position: [0, 0, 12], fov: 50 }}
-        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
-        dpr={[1, 1.5]}
-        frameloop="demand"
+        gl={{ 
+          antialias: false, 
+          alpha: true, 
+          powerPreference: 'high-performance',
+          stencil: false,
+          depth: true
+        }}
+        dpr={typeof window !== 'undefined' && window.devicePixelRatio > 2 ? [1, 2] : [1, 1.5]}
+        frameloop="always"
+        performance={{ min: 0.5 }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#000000', 0)
+          gl.shadowMap.enabled = false
+        }}
       >
         {/* Simplified lighting for performance */}
         <ambientLight intensity={0.8} />
@@ -184,25 +193,48 @@ export default function SkillBubbles({ id, onSkillClick }: SkillBubblesProps) {
         {/* Camera controller for gentle auto-rotation */}
         <CameraController />
       </Canvas>
-    </div>
+      </div>
+    </ErrorBoundary3D>
   )
 }
 
 // Component to handle gentle camera rotation
 function CameraController() {
   const { camera } = useThree()
+  const [isHovered, setIsHovered] = useState(false)
   
   useFrame((state) => {
     const time = state.clock.getElapsedTime()
     
+    // Slow down rotation when user is interacting
+    const speed = isHovered ? 0.02 : 0.05
+    
     // Gentle orbital rotation
-    camera.position.x = Math.cos(time * 0.1) * 12
-    camera.position.z = Math.sin(time * 0.1) * 12
-    camera.position.y = Math.sin(time * 0.05) * 2
+    const radius = 12 + Math.sin(time * 0.1) * 1
+    camera.position.x = Math.cos(time * speed) * radius
+    camera.position.z = Math.sin(time * speed) * radius
+    camera.position.y = Math.sin(time * 0.03) * 1.5
     
     // Always look at the center
     camera.lookAt(0, 0, 0)
   })
+
+  // Listen for global mouse events to pause rotation
+  useEffect(() => {
+    const handleMouseEnter = () => setIsHovered(true)
+    const handleMouseLeave = () => setIsHovered(false)
+    
+    const canvas = document.querySelector('canvas')
+    if (canvas) {
+      canvas.addEventListener('mouseenter', handleMouseEnter)
+      canvas.addEventListener('mouseleave', handleMouseLeave)
+      
+      return () => {
+        canvas.removeEventListener('mouseenter', handleMouseEnter)
+        canvas.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [])
   
   return null
 }

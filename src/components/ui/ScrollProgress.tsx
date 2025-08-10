@@ -9,10 +9,11 @@ interface ScrollProgressProps {
 }
 
 export default function ScrollProgress({ id }: ScrollProgressProps) {
-  const { scrollProgress, scrollDirection, isScrolling } = useScrollProgress()
+  const { scrollProgress } = useScrollProgress()
   const activeSection = useActiveSection([
     'portfolio-hero-section',
-    'portfolio-about-section', 
+    'portfolio-about-section',
+    'portfolio-experience-section',
     'portfolio-projects-section',
     'portfolio-contact-section'
   ])
@@ -21,6 +22,7 @@ export default function ScrollProgress({ id }: ScrollProgressProps) {
     switch (sectionId) {
       case 'portfolio-hero-section': return 'Home'
       case 'portfolio-about-section': return 'About'
+      case 'portfolio-experience-section': return 'Experience'
       case 'portfolio-projects-section': return 'Projects'
       case 'portfolio-contact-section': return 'Contact'
       default: return ''
@@ -28,46 +30,17 @@ export default function ScrollProgress({ id }: ScrollProgressProps) {
   }
 
   return (
-    <div id={id} className="fixed top-0 left-0 right-0 z-40 pointer-events-none">
+    <div id={id} className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
       {/* Progress bar */}
-      <motion.div
+      <div
         id={generateElementId('scroll', 'progress', 'bar')}
-        className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left"
-        initial={{ scaleX: 0 }}
+        className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-transform duration-75 ease-out origin-left"
         style={{ 
-          scaleX: scrollProgress / 100,
+          transform: `scaleX(${scrollProgress / 100})`,
           transformOrigin: '0%'
         }}
-        transition={{ duration: 0.1 }}
       />
 
-      {/* Scroll indicator with section info */}
-      <motion.div
-        id={generateElementId('scroll', 'indicator', 'section')}
-        className="absolute top-4 right-4 pointer-events-auto"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ 
-          opacity: isScrolling ? 1 : 0.3,
-          x: scrollDirection === 'down' ? 0 : 10
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-lg px-3 py-2 shadow-lg">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="text-gray-600 dark:text-gray-400">
-              {Math.round(scrollProgress)}%
-            </div>
-            {activeSection && (
-              <>
-                <div className="w-1 h-1 bg-gray-400 rounded-full" />
-                <div className="text-gray-900 dark:text-white font-medium">
-                  {getSectionLabel(activeSection)}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </motion.div>
 
       {/* Mini navigation dots */}
       <motion.div
@@ -81,6 +54,7 @@ export default function ScrollProgress({ id }: ScrollProgressProps) {
           {[
             'portfolio-hero-section',
             'portfolio-about-section',
+            'portfolio-experience-section',
             'portfolio-projects-section', 
             'portfolio-contact-section'
           ].map((sectionId, _) => {

@@ -2,11 +2,10 @@
 
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Send, MapPin, Mail, Github, Linkedin, Twitter, CheckCircle, AlertCircle } from 'lucide-react'
+import { Send, MapPin, Mail, Github, Linkedin, CheckCircle, AlertCircle } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import { Card } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import Lazy3DComponent from '@/components/ui/Lazy3DComponent'
 import { SITE_CONFIG, SOCIAL_LINKS, EMAIL_CONFIG, FORM_VALIDATION } from '@/lib/constants'
 import { fadeInUp, staggerContainer, generateElementId } from '@/lib/utils'
 import { useScrollAnimation } from '@/hooks/useIntersectionObserver'
@@ -128,7 +127,6 @@ export default function Contact({ id }: ContactProps) {
     switch (iconName) {
       case 'Github': return Github
       case 'Linkedin': return Linkedin
-      case 'Twitter': return Twitter
       case 'Mail': return Mail
       default: return Mail
     }
@@ -185,22 +183,6 @@ export default function Contact({ id }: ContactProps) {
                 </p>
               </div>
 
-              {/* 3D Earth Model */}
-              <motion.div
-                id={generateElementId('contact', '3d', 'earth-section')}
-                variants={fadeInUp}
-                className="mb-8"
-              >
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Connect from Anywhere
-                </h4>
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-4">
-                  <Lazy3DComponent
-                    componentName="EarthModel" 
-                    id={generateElementId('contact', '3d', 'earth-model')} 
-                  />
-                </div>
-              </motion.div>
 
               {/* Contact Details */}
               <div 

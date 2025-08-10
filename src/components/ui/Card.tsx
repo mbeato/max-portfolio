@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   id: string
   variant?: 'default' | 'outlined' | 'elevated' | 'glass'
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
   asMotion?: boolean
   motionProps?: MotionProps
   hover?: boolean
@@ -40,7 +40,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         'p-0': padding === 'none',
         'p-4': padding === 'sm',
         'p-6': padding === 'md',
-        'p-8': padding === 'lg'
+        'p-8': padding === 'lg',
+        'p-12': padding === 'xl'
       },
       
       // Hover effects

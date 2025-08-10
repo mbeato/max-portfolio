@@ -23,7 +23,7 @@ export const PROJECTS: Project[] = [
     ],
     links: {
       demo: 'https://maximusbeato.com',
-      github: 'https://github.com/maximusbeato/portfolio',
+      github: 'https://github.com/mbeato/portfolio',
       article: 'https://blog.maximusbeato.com/building-modern-portfolio'
     },
     createdDate: '2024-03-01',
@@ -53,7 +53,7 @@ export const PROJECTS: Project[] = [
     ],
     links: {
       demo: 'https://shop-demo.maximusbeato.com',
-      github: 'https://github.com/maximusbeato/ecommerce-platform'
+      github: 'https://github.com/mbeato/ecommerce-platform'
     },
     createdDate: '2024-01-15',
     updatedDate: '2024-02-28',
@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
     ],
     links: {
       demo: 'https://tasks.maximusbeato.com',
-      github: 'https://github.com/maximusbeato/task-manager'
+      github: 'https://github.com/mbeato/task-manager'
     },
     createdDate: '2023-11-10',
     updatedDate: '2023-12-20',
@@ -113,7 +113,7 @@ export const PROJECTS: Project[] = [
     ],
     links: {
       demo: 'https://api-tool.maximusbeato.com',
-      github: 'https://github.com/maximusbeato/api-testing-tool'
+      github: 'https://github.com/mbeato/api-testing-tool'
     },
     createdDate: '2023-09-05',
     updatedDate: '2023-10-15',
@@ -143,7 +143,7 @@ export const PROJECTS: Project[] = [
     ],
     links: {
       demo: 'https://design.maximusbeato.com',
-      github: 'https://github.com/maximusbeato/design-system',
+      github: 'https://github.com/mbeato/design-system',
       figma: 'https://figma.com/@maximusbeato/design-system'
     },
     createdDate: '2024-02-01',
@@ -173,7 +173,7 @@ export const PROJECTS: Project[] = [
       '/projects/ml-viz-analysis.jpg'
     ],
     links: {
-      github: 'https://github.com/maximusbeato/ml-data-viz'
+      github: 'https://github.com/mbeato/ml-data-viz'
     },
     createdDate: '2024-03-20',
     updatedDate: '2024-03-20',
