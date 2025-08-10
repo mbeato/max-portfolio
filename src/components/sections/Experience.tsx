@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo, animate } from 'framer-motion'
 import { Calendar, MapPin, Building2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import BinaryMatrix from '@/components/ui/BinaryMatrix'
@@ -31,7 +31,7 @@ interface Experience {
 
 // Constants for better performance and maintainability
 const TIMELINE_CONSTANTS = {
-  CARD_DISPLAY_WIDTH: 700,
+  CARD_DISPLAY_WIDTH: 700 as number,
   CARD_GAP: 32, // matches Tailwind gap-8 (2rem)
   // Derived width used for translation distance per card
   CARD_WIDTH: 700 + 32,
@@ -41,7 +41,7 @@ const TIMELINE_CONSTANTS = {
   END_YEAR: 2026,
   HANDLE_WIDTH: 40, // Timeline handle width offset
   CONTAINER_HEIGHT: 500 // Increased height to prevent card cutoff
-} as const
+}
 
 export default function Experience({ id }: ExperienceProps) {
   const { ref, isIntersecting, hasIntersected } = useScrollAnimation()
@@ -49,6 +49,13 @@ export default function Experience({ id }: ExperienceProps) {
   const [isDragging, setIsDragging] = useState(false)
   const cardsViewportRef = useRef<HTMLDivElement>(null)
   const [sidePadding, setSidePadding] = useState<number>(0)
+  const firstCardRef = useRef<HTMLDivElement>(null)
+  const [effectiveCardWidth, setEffectiveCardWidth] = useState<number>(TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH)
+  const [stepWidth, setStepWidth] = useState<number>(TIMELINE_CONSTANTS.CARD_WIDTH)
+  const cardsX = useMotionValue(0)
+  const cardsDragStartProgressRef = useRef(0)
+  const cardsDragStartXRef = useRef(0)
+  const cardsDragAccumRef = useRef(0)
   
   // Draggable timeline values
   const timelineProgress = useMotionValue(0)
@@ -194,10 +201,18 @@ export default function Experience({ id }: ExperienceProps) {
         dragX.set(initialProgress * trackWidthValue)
       }
 
+      // Measure card width (layout width, not affected by transform scale)
+      const vw = cardsViewportRef.current?.getBoundingClientRect().width ?? 0
+      let measuredWidth = TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH
+      if (firstCardRef.current) {
+        const w = firstCardRef.current.offsetWidth
+        measuredWidth = w || measuredWidth
+        setEffectiveCardWidth(measuredWidth)
+        setStepWidth(measuredWidth + TIMELINE_CONSTANTS.CARD_GAP)
+      }
       // Compute viewport-based side padding so first card starts centered
-      if (cardsViewportRef.current) {
-        const vw = cardsViewportRef.current.getBoundingClientRect().width
-        const pad = Math.max(0, (vw - TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH) / 2)
+      if (vw) {
+        const pad = Math.max(0, (vw - measuredWidth) / 2)
         setSidePadding(pad)
       }
     }
@@ -216,9 +231,17 @@ export default function Experience({ id }: ExperienceProps) {
         dragX.set(currentProgress * trackWidthValue)
       }
 
-      if (cardsViewportRef.current) {
-        const vw = cardsViewportRef.current.getBoundingClientRect().width
-        const pad = Math.max(0, (vw - TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH) / 2)
+      // Re-measure card width on resize
+      const vw = cardsViewportRef.current?.getBoundingClientRect().width ?? 0
+      let measuredWidth = TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH
+      if (firstCardRef.current) {
+        const w = firstCardRef.current.offsetWidth
+        measuredWidth = w || measuredWidth
+        setEffectiveCardWidth(measuredWidth)
+        setStepWidth(measuredWidth + TIMELINE_CONSTANTS.CARD_GAP)
+      }
+      if (vw) {
+        const pad = Math.max(0, (vw - measuredWidth) / 2)
         setSidePadding(pad)
       }
     }
@@ -230,6 +253,27 @@ export default function Experience({ id }: ExperienceProps) {
       window.removeEventListener('resize', handleResize)
     }
   }, [currentExperience, experiences.length, timelineProgress, dragX]);
+
+  // Sync cardsX with timeline progress and responsive stepWidth (but not during drag)
+  useEffect(() => {
+    const unsubscribe = timelineProgress.on('change', (p) => {
+      if (!isDragging) {
+        cardsX.set(-p * (experiences.length - 1) * stepWidth)
+      }
+    })
+    // Set immediately based on current value (if not dragging)
+    if (!isDragging) {
+      cardsX.set(-timelineProgress.get() * (experiences.length - 1) * stepWidth)
+    }
+    return unsubscribe
+  }, [timelineProgress, cardsX, experiences.length, stepWidth, isDragging])
+
+  // Update cardsX when stepWidth changes (e.g., on resize)
+  useEffect(() => {
+    if (!isDragging) {
+      cardsX.set(-timelineProgress.get() * (experiences.length - 1) * stepWidth)
+    }
+  }, [stepWidth, cardsX, timelineProgress, experiences.length, isDragging])
 
   // Remove debouncing as it interferes with timeline sync
   // Direct updates work better for drag interaction
@@ -265,6 +309,79 @@ export default function Experience({ id }: ExperienceProps) {
       setCurrentExperience(nearestIndex)
     }
   }, [timelineProgress, dragX, experiences.length])
+
+  // Drag the cards track directly (touch/mouse swipe on cards)
+  const handleCardsDragStart = useCallback(() => {
+    setIsDragging(true)
+    cardsDragStartProgressRef.current = timelineProgress.get()
+    // Use the current cardsX position as the starting point
+    cardsDragStartXRef.current = cardsX.get()
+    cardsDragAccumRef.current = 0
+  }, [timelineProgress, cardsX])
+
+  const handleCardsDrag = useCallback((event: any, info: PanInfo) => {
+    // Accumulate delta to avoid fighting with programmatic transforms
+    const total = Math.max(1, (experiences.length - 1) * stepWidth)
+    cardsDragAccumRef.current += info.delta.x
+    const desiredX = cardsDragStartXRef.current + cardsDragAccumRef.current
+    const clampedX = Math.max(-total, Math.min(0, desiredX))
+    const newProgress = Math.min(1, Math.max(0, -clampedX / total))
+    
+    // During drag, directly update cardsX and timeline progress
+    cardsX.set(clampedX)
+    timelineProgress.set(newProgress)
+    
+    // Keep scrubber in sync while dragging
+    if (timelineRef.current) {
+      const trackRect = timelineRef.current.getBoundingClientRect()
+      const trackWidthValue = Math.max(0, trackRect.width - 32)
+      dragX.set(newProgress * trackWidthValue)
+    }
+  }, [experiences.length, stepWidth, timelineProgress, dragX, cardsX])
+
+  const handleCardsDragEnd = useCallback(() => {
+    const progress = timelineProgress.get()
+    const nearestIndex = Math.round(progress * (experiences.length - 1))
+    const targetProgress = nearestIndex / (experiences.length - 1)
+    const targetX = -targetProgress * (experiences.length - 1) * stepWidth
+    
+    // Spring animate to the snapped position for smoothness
+    const timelineControls = animate(timelineProgress, targetProgress, { type: 'spring', stiffness: 300, damping: 30 })
+    const cardsControls = animate(cardsX, targetX, { 
+      type: 'spring', 
+      stiffness: 300, 
+      damping: 30,
+      onComplete: () => {
+        // Only set isDragging to false after animations complete
+        setIsDragging(false)
+      }
+    })
+    
+    if (timelineRef.current) {
+      const trackRect = timelineRef.current.getBoundingClientRect()
+      const trackWidthValue = Math.max(0, trackRect.width - 32)
+      animate(dragX, targetProgress * trackWidthValue, { type: 'spring', stiffness: 300, damping: 30 })
+    }
+    setCurrentExperience(nearestIndex)
+    
+    return () => {
+      timelineControls.stop()
+      cardsControls.stop()
+    }
+  }, [timelineProgress, dragX, experiences.length, stepWidth, cardsX])
+
+  // Trackpad/mouse wheel horizontal scroll support (don’t block vertical page scroll)
+  const handleCardsWheel = useCallback((e: any) => {
+    const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : 0
+    if (!dx) return
+    e.preventDefault()
+    const total = Math.max(1, (experiences.length - 1) * stepWidth)
+    const currentX = -timelineProgress.get() * total
+    const desiredX = currentX - dx
+    const clampedX = Math.max(-total, Math.min(0, desiredX))
+    const newProgress = Math.min(1, Math.max(0, -clampedX / total))
+    timelineProgress.set(newProgress)
+  }, [experiences.length, stepWidth, timelineProgress])
 
   // Navigate to specific experience
   const navigateToExperience = useCallback((index: number) => {
@@ -515,7 +632,7 @@ export default function Experience({ id }: ExperienceProps) {
             style={{ minHeight: TIMELINE_CONSTANTS.CONTAINER_HEIGHT }}
           >
             {/* Navigation Arrows */}
-            <div className="absolute left-4 right-4 top-1/2 transform -translate-y-1/2 flex justify-between pointer-events-none z-20">
+              <div className="hidden md:flex absolute left-4 right-4 top-1/2 transform -translate-y-1/2 justify-between pointer-events-none z-20">
               <motion.button
                 onClick={() => navigateToExperience(Math.max(0, currentExperience - 1))}
                 disabled={currentExperience === 0}
@@ -546,24 +663,26 @@ export default function Experience({ id }: ExperienceProps) {
             </div>
 
             {/* Experience Cards */}
-            <div className="relative w-full py-6">
+      <div className="relative w-full py-6">
               <div ref={cardsViewportRef} className="h-full">
                 <motion.div 
-                  className="flex"
+                  className="flex touch-pan-y select-none cursor-grab active:cursor-grabbing"
                   style={{ 
                     gap: TIMELINE_CONSTANTS.CARD_GAP,
                     paddingLeft: sidePadding,
                     paddingRight: sidePadding,
-                    x: useTransform(
-                      timelineProgress, 
-                      [0, 1], 
-                      [
-                        0, // First card centered
-                        -((experiences.length - 1) * TIMELINE_CONSTANTS.CARD_WIDTH) // translate by card width + gap per step
-                      ]
-                    ),
+        x: cardsX,
                     willChange: 'transform'
-                  }}>
+                  }}
+                  drag="x"
+                  dragConstraints={{ left: -(experiences.length - 1) * stepWidth, right: 0 }}
+                  dragElastic={0}
+                  dragMomentum={false}
+                  onDragStart={handleCardsDragStart}
+                  onDrag={handleCardsDrag}
+                  onDragEnd={handleCardsDragEnd}
+                  onWheel={handleCardsWheel}
+                >
                 {experiences.map((experience, index) => {
                   // Emphasis based on how close the timeline is to this card's center
                   const center = index / (experiences.length - 1)
@@ -590,11 +709,13 @@ export default function Experience({ id }: ExperienceProps) {
                       key={experience.id}
                       className="flex-shrink-0"
                       style={{ 
-                        width: `${TIMELINE_CONSTANTS.CARD_DISPLAY_WIDTH}px`,
+                        // Responsive width: cap at 700px, shrink on small screens
+                        width: 'min(700px, calc(100vw - 2rem))',
                         scale: scaleMV,
                         opacity: opacityMV,
                         rotateY: rotateYMV
                       }}
+                      ref={index === 0 ? firstCardRef : undefined}
                     >
                       <Card
                         id={generateElementId('experience', 'card', experience.id)}
@@ -711,6 +832,7 @@ export default function Experience({ id }: ExperienceProps) {
                 </motion.div>
               </div>
             </div>
+
           </motion.div>
 
         </motion.div>
