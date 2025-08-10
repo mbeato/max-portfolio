@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card } from '@/components/ui/Card'
 import Lazy3DComponent from '@/components/ui/Lazy3DComponent'
@@ -92,21 +93,16 @@ export default function About({ id }: AboutProps) {
                 </h3>
                 <div id={generateElementId('about','introduction','bio')} className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                   <p>
-                    I&apos;m a Purdue University student who loves building things that are fast, reliable, and help real people.
-                    I love learning new tech in and out of class, especially with all the cool stuff coming out these days, and I&apos;m always looking for an excuse to tinker with something new just to see how it works.
+                    I’m a Purdue University student who builds because it’s fun. I like making things that run fast, look sharp, and actually make someone’s day better. Whether it’s a new framework, a weird API, or some half-baked side project, I’m always curious to see how it works and what I can make with it.
                   </p>
                   <p>
-                    Climbing taught me to break big problems into small moves. Route reading feels a lot like debugging: stay calm,
-                    test the next hold, and commit when it matters. That mindset carries into my work—iterate, get signal quickly,
-                    and keep momentum.
+                    Climbing taught me to break big problems into small moves. Route reading feels a lot like debugging: stay calm, test the next hold, and commit when it matters. That mindset carries into my work—iterate, get signal quickly, and keep momentum.
                   </p>
                   <p>
-                    Powerlifting keeps me disciplined. Progressive overload is just versioning for strength—small, consistent gains
-                    over time. I bring the same approach to shipping features: tight feedback loops, good tooling, and steady improvement.
+                    Powerlifting keeps me disciplined. Progressive overload is just versioning for strength—small, consistent gains over time. I bring the same approach to shipping features: tight feedback loops, good tooling, and steady improvement.
                   </p>
                   <p>
-                    I like working with people who care about their craft. If you&apos;re into building polished user experiences or
-                    pushing a stack to do more with less, we&apos;ll get along.
+                    I like working with people who get excited about the little details—clean animations, smart abstractions, the “it just works” moments. If you’re into building things that feel great to use and stretching a stack in new ways, we’ll get along.
                   </p>
                 </div>
 
@@ -129,50 +125,64 @@ export default function About({ id }: AboutProps) {
                 {/* Staggered Photo Grid (replace placeholders with your images) */}
                 <div 
                   id={generateElementId('about', 'photos', 'grid')}
-                  className="grid grid-cols-2 gap-3"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3"
                 >
-                  {/* Top-left tall photo */}
+                  {/* Left: tall portrait (spans two rows on md+) */}
                   <div 
-                    id={generateElementId('about','photos','item-1')}
-                    className="relative overflow-hidden rounded-lg aspect-[4/5] bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-700 dark:to-gray-600"
+                    id={generateElementId('about','photos','portrait')}
+                    className="group relative overflow-hidden rounded-lg md:row-span-2 bg-gray-200 dark:bg-gray-700 aspect-[3/4] md:aspect-auto"
                   >
-                    {/* <img src="/images/about/climbing.jpg" alt="Bouldering session" className="absolute inset-0 w-full h-full object-cover" /> */}
-                    <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
-                      Add Photo (Climbing)
-                    </div>
+                    <Image
+                      src="/images/Me.jpg"
+                      alt="Portrait"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 45vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      style={{ objectPosition: 'center 15%' }}
+                      priority
+                    />
                   </div>
 
-                  {/* Top-right square shifted down */}
+                  {/* Right top: climbing */}
                   <div 
-                    id={generateElementId('about','photos','item-2')}
-                    className="relative overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-gray-700 dark:to-gray-600 translate-y-4"
+                    id={generateElementId('about','photos','climbing')}
+                    className="group relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[16/10]"
                   >
-                    {/* <img src="/images/about/lifting.jpg" alt="Deadlift PR" className="absolute inset-0 w-full h-full object-cover" /> */}
-                    <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
-                      Add Photo (Powerlifting)
-                    </div>
+                    <Image
+                      src="/images/Climbing.jpg"
+                      alt="Climbing session"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 45vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
 
-                  {/* Bottom-left square shifted up */}
+                  {/* Right bottom: lifting */}
                   <div 
-                    id={generateElementId('about','photos','item-3')}
-                    className="relative overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-amber-100 to-rose-100 dark:from-gray-700 dark:to-gray-600 -translate-y-3"
+                    id={generateElementId('about','photos','lifting')}
+                    className="group relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[16/10]"
                   >
-                    {/* <img src="/images/about/purdue.jpg" alt="Purdue campus" className="absolute inset-0 w-full h-full object-cover" /> */}
-                    <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
-                      Add Photo (Purdue / Campus)
-                    </div>
+                    <Image
+                      src="/images/Lifting.jpg"
+                      alt="Powerlifting training"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 45vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
 
-                  {/* Bottom-right tall photo */}
+                  {/* Bottom: wide lifestyle (cats) */}
                   <div 
-                    id={generateElementId('about','photos','item-4')}
-                    className="relative overflow-hidden rounded-lg aspect-[4/5] bg-gradient-to-br from-indigo-100 to-cyan-100 dark:from-gray-700 dark:to-gray-600"
+                    id={generateElementId('about','photos','cats')}
+                    className="group relative overflow-hidden rounded-lg md:col-span-2 aspect-[16/9] bg-gray-200 dark:bg-gray-700"
                   >
-                    {/* <img src="/images/about/friends.jpg" alt="Training partners" className="absolute inset-0 w-full h-full object-cover" /> */}
-                    <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
-                      Add Photo (Lifestyle)
-                    </div>
+                    <Image
+                      src="/images/Cats.jpg"
+                      alt="Lifestyle"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 560px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
                 </div>
                 
@@ -182,7 +192,7 @@ export default function About({ id }: AboutProps) {
                   className="mt-4 text-center"
                 >
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Snapshots • Climbing • Lifting • Purdue
+                    Climbing • Lifting • Cats • Purdue
                   </p>
                 </div>
               </Card>
