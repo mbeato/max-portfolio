@@ -24,8 +24,8 @@ interface Experience {
   color: string
 }
 
-const CARD_WIDTH = 700
-const CARD_GAP = 48  // Increased spacing between cards
+const CARD_WIDTH = 700 // max card width on large screens
+const CARD_GAP = 48  // default gap on large screens
 
 export default function Experience({ id }: ExperienceProps) {
   const { ref, isIntersecting, hasIntersected } = useScrollAnimation()
@@ -100,20 +100,24 @@ export default function Experience({ id }: ExperienceProps) {
     }
   ]
 
+  // Responsive card sizing
+  const cardWidth = Math.min(CARD_WIDTH, Math.max(280, Math.floor(containerWidth * 0.9)))
+  const cardGap = containerWidth < 480 ? 16 : containerWidth < 768 ? 24 : CARD_GAP
+
   // Track geometry
-  const totalWidth = experiences.length * (CARD_WIDTH + CARD_GAP) - CARD_GAP
+  const totalWidth = experiences.length * (cardWidth + cardGap) - cardGap
   // Max distance to drag so that the last card can be centered.
   // Derivation: to center card i, x = -i * (CARD_WIDTH + CARD_GAP).
   // Thus for the last card (i = n-1), maxDraggable = (n-1) * (CARD_WIDTH + CARD_GAP)
   // which equals totalWidth - CARD_WIDTH.
-  const maxDraggable = Math.max(0, totalWidth - CARD_WIDTH)
+  const maxDraggable = Math.max(0, totalWidth - cardWidth)
   // Distance between card centers for navigation
-  const step = CARD_WIDTH + CARD_GAP
+  const step = cardWidth + cardGap
   
   // Calculate side padding for layout (cannot be negative in CSS)
-  const sidePadding = Math.max(0, (containerWidth - CARD_WIDTH) / 2)
+  const sidePadding = Math.max(0, (containerWidth - cardWidth) / 2)
   // Compute the x value that centers the first card regardless of viewport size
-  const baseX = (containerWidth / 2) - (sidePadding + CARD_WIDTH / 2)
+  const baseX = (containerWidth / 2) - (sidePadding + cardWidth / 2)
   const rightBound = baseX
   const leftBound = baseX - maxDraggable
 
@@ -278,7 +282,7 @@ export default function Experience({ id }: ExperienceProps) {
                 className="flex cursor-grab active:cursor-grabbing"
                 style={{ 
                   x,
-                  gap: CARD_GAP,
+                  gap: cardGap,
                   paddingLeft: sidePadding,
                   paddingRight: sidePadding
                 }}
@@ -296,11 +300,11 @@ export default function Experience({ id }: ExperienceProps) {
                 {experiences.map((experience, index) => {
                   // Emphasis based on true pixel distance of card center to viewport center
                   const centerProgress = useTransform(x, (currentX) => {
-                    const cardCenter = sidePadding + index * (CARD_WIDTH + CARD_GAP) + CARD_WIDTH / 2 + currentX
+                    const cardCenter = sidePadding + index * (cardWidth + cardGap) + cardWidth / 2 + currentX
                     const viewportCenter = containerWidth / 2
                     const dist = Math.abs(cardCenter - viewportCenter)
                     // Fully focused within ~60% of card width
-                    const maxDistPx = CARD_WIDTH * 0.6
+                    const maxDistPx = cardWidth * 0.6
                     const t = 1 - Math.min(dist / maxDistPx, 1)
                     return t
                   })
@@ -308,10 +312,10 @@ export default function Experience({ id }: ExperienceProps) {
                   const scale = useTransform(centerProgress, [0, 1], [0.9, 1])
                   const opacity = useTransform(centerProgress, [0, 1], [0.6, 1])
                   const rotateY = useTransform(x, (currentX) => {
-                    const cardCenter = sidePadding + index * (CARD_WIDTH + CARD_GAP) + CARD_WIDTH / 2 + currentX
+                    const cardCenter = sidePadding + index * (cardWidth + cardGap) + cardWidth / 2 + currentX
                     const viewportCenter = containerWidth / 2
                     const dist = Math.abs(cardCenter - viewportCenter)
-                    const maxDistPx = CARD_WIDTH * 0.6
+                    const maxDistPx = cardWidth * 0.6
                     const t = 1 - Math.min(dist / maxDistPx, 1)
                     const dir = cardCenter < viewportCenter ? 1 : -1
                     return dir * (1 - t) * 12 // Subtle 3D tilt away from center
@@ -322,7 +326,7 @@ export default function Experience({ id }: ExperienceProps) {
                     key={experience.id}
                     className="flex-shrink-0"
                     style={{ 
-                      width: CARD_WIDTH,
+                      width: cardWidth,
                       scale,
                       opacity,
                       rotateY
