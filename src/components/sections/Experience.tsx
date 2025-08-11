@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
+import { motion, useMotionValue, useTransform, animate, PanInfo } from 'framer-motion'
 import { Calendar, MapPin, Building2 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import BinaryMatrix from '@/components/ui/BinaryMatrix'
@@ -164,13 +164,28 @@ export default function Experience({ id }: ExperienceProps) {
     // Let Framer Motion handle the dragging
   }
 
-  const handleDragEnd = () => {
-    // Clamp position to valid range
+  const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const velocityX = info.velocity.x || 0
     const currentX = x.get()
-    const clampedX = Math.max(leftBound, Math.min(rightBound, currentX))
-    if (currentX !== clampedX) {
-      x.set(clampedX)
+    const indexFloat = (baseX - currentX) / step
+    const FLICK_VELOCITY = 800 // px/s
+
+    let targetIndex = Math.round(indexFloat)
+
+    // If user flicks fast, bias to next/prev card regardless of closeness
+    if (Math.abs(velocityX) > FLICK_VELOCITY) {
+      if (velocityX < 0) {
+        // Flicked left -> go to next card
+        targetIndex = Math.ceil(indexFloat)
+      } else {
+        // Flicked right -> go to previous card
+        targetIndex = Math.floor(indexFloat)
+      }
     }
+
+    // Clamp to bounds and animate
+    targetIndex = Math.max(0, Math.min(experiences.length - 1, targetIndex))
+    navigateToCard(targetIndex)
   }
 
   // Navigate to specific card (desktop only)
