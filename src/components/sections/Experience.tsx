@@ -36,36 +36,7 @@ export default function Experience({ id }: ExperienceProps) {
   const x = useMotionValue(0)
 
   const experiences: Experience[] = [
-    {
-      id: "data-mine-2022",
-      title: "Undergraduate Data Science Researcher",
-      company: "The Data Mine, Purdue University",
-      location: "West Lafayette, IN",
-      duration: "Aug 2022 – May 2023",
-      description: [
-        "Analyzed social services datasets using R and SQL to surface trends and validate data pulls",
-        "Cleaned, joined, and documented large datasets in Azure Data Studio to produce reliable, reusable tables",
-        "Built Tableau dashboards and presented findings to Indiana FSSA stakeholders and at The Data Mine Symposium"
-      ],
-      technologies: ["R", "SQL", "Azure Data Studio", "Tableau", "PostgreSQL"],
-      type: "research",
-      color: "from-cyan-400 to-blue-500"
-    },
-    {
-      id: "docreserve-2024",
-      title: "Frontend Engineer",
-      company: "DocReserve",
-      location: "Boston, MA — Remote",
-      duration: "Apr 2024 – Aug 2024",
-      description: [
-        "Built and refactored reusable UI components with React, TypeScript, and MUI to standardize the interface",
-        "Improved the calendar experience (navigation, readability, empty/loading states) using TypeScript and Prisma",
-        "Developed in a Docker-based environment for consistent builds and straightforward local setup"
-      ],
-      technologies: ["React", "TypeScript", "MUI", "Prisma", "Docker"],
-      type: "freelance",
-      color: "from-purple-400 to-violet-500"
-    },
+    // Most recent first
     {
       id: "vertikalx-2025",
       title: "Software Engineering Intern",
@@ -83,20 +54,34 @@ export default function Experience({ id }: ExperienceProps) {
       color: "from-blue-400 to-indigo-500"
     },
     {
-      id: "future-2026",
-      title: "What's Next?",
-      company: "Exciting Opportunities Ahead",
-      location: "Wherever Innovation Leads",
-      duration: "2026 and Beyond",
+      id: "docreserve-2024",
+      title: "Frontend Engineer",
+      company: "DocReserve",
+      location: "Boston, MA — Remote",
+      duration: "Apr 2024 – Aug 2024",
       description: [
-        "Open to full-time software engineering opportunities in cutting-edge technology companies",
-        "Excited to contribute to innovative projects that make a meaningful impact on users and society",
-        "Passionate about continuous learning and growing alongside talented teams in dynamic environments",
-        "Ready to tackle new challenges in emerging technologies like AI, distributed systems, or developer tools"
+        "Built and refactored reusable UI components with React, TypeScript, and MUI to standardize the interface",
+        "Improved the calendar experience (navigation, readability, empty/loading states) using TypeScript and Prisma",
+        "Developed in a Docker-based environment for consistent builds and straightforward local setup"
       ],
-      technologies: ["Innovation", "Growth", "Collaboration", "Impact", "Learning"],
-      type: "future",
-      color: "from-green-400 to-emerald-500"
+      technologies: ["React", "TypeScript", "MUI", "Prisma", "Docker"],
+      type: "freelance",
+      color: "from-purple-400 to-violet-500"
+    },
+    {
+      id: "data-mine-2022",
+      title: "Undergraduate Data Science Researcher",
+      company: "The Data Mine, Purdue University",
+      location: "West Lafayette, IN",
+      duration: "Aug 2022 – May 2023",
+      description: [
+        "Analyzed social services datasets using R and SQL to surface trends and validate data pulls",
+        "Cleaned, joined, and documented large datasets in Azure Data Studio to produce reliable, reusable tables",
+        "Built Tableau dashboards and presented findings to Indiana FSSA stakeholders and at The Data Mine Symposium"
+      ],
+      technologies: ["R", "SQL", "Azure Data Studio", "Tableau", "PostgreSQL"],
+      type: "research",
+      color: "from-cyan-400 to-blue-500"
     }
   ]
 
@@ -244,7 +229,7 @@ export default function Experience({ id }: ExperienceProps) {
       id={id}
       className="py-16 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden"
       role="region"
-      aria-label="Professional Experience Timeline"
+  aria-label="Experience"
     >
       {/* Binary Matrix Background */}
       <BinaryMatrix
@@ -269,7 +254,7 @@ export default function Experience({ id }: ExperienceProps) {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-              Professional Timeline
+              Experience
             </h2>
             <p 
               className="text-lg text-blue-200 max-w-2xl mx-auto"
@@ -428,7 +413,7 @@ export default function Experience({ id }: ExperienceProps) {
               </motion.div>
             </div>
 
-            {/* Timeline connector line with active indicator */}
+            {/* Pagination dots with active indicator */}
             <div className="flex justify-center items-center mt-6">
               <div className="flex items-center gap-0 relative">
                 {experiences.map((_, index) => {
@@ -467,7 +452,7 @@ export default function Experience({ id }: ExperienceProps) {
             {/* Drag instruction */}
             <div className="flex justify-center mt-3">
               <p className="text-sm text-slate-400 text-center">
-                <span className="md:hidden">Swipe</span><span className="hidden md:inline">Drag</span> cards to explore timeline
+                <span className="md:hidden">Swipe</span><span className="hidden md:inline">Drag</span> cards to explore experience
               </p>
             </div>
 
