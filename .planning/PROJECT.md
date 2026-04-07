@@ -17,6 +17,11 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 - ✓ Framer Motion for animations — existing
 - ✓ Vercel deployment — existing
 - ✓ TypeScript throughout — existing
+- ✓ Design system tokens (color, typography, spacing, shadows) codified in CSS @theme — Phase 2
+- ✓ Coral Peak (#E8523F) as sole accent color — Phase 2
+- ✓ Space Grotesk + JetBrains Mono typography — Phase 2
+- ✓ Motion vocabulary with reduced-motion support — Phase 2
+- ✓ Anti-slop checklist enforced (no glassmorphism, no Inter, no gradients) — Phase 2
 
 ### Active
 
@@ -78,10 +83,10 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Topographic contour line theme | Provides cohesive visual direction vs random one-off animations | — Pending |
-| White + black + coral/red-orange palette | Monochrome base with bold accent avoids generic gradient territory | — Pending |
+| White + black + coral/red-orange palette | Monochrome base with bold accent avoids generic gradient territory | Validated in Phase 2 |
 | Case study pages over project cards | Shows depth of thinking, avoids generic card grid pattern | — Pending |
-| Remove Three.js/3D entirely | Theme is 2D topographic, 3D adds complexity without serving the concept | — Pending |
-| No dark mode | Single cohesive white theme is the design statement | — Pending |
+| Remove Three.js/3D entirely | Theme is 2D topographic, 3D adds complexity without serving the concept | Validated in Phase 1 |
+| No dark mode | Single cohesive white theme is the design statement | Validated in Phase 1 |
 | No component library default styling | Avoids looking like every other shadcn portfolio | — Pending |
 
 ## Evolution
@@ -102,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-07 after initialization*
+*Last updated: 2026-04-07 after Phase 2 (Design System) completion — full design token system, typography, motion vocabulary, and anti-slop constraints codified*
