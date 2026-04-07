@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 02-design-system plan 02-04-PLAN.md
-last_updated: "2026-04-07T23:12:16.117Z"
+status: Ready to execute
+stopped_at: Completed 03-content-case-studies plan 03-01-PLAN.md
+last_updated: "2026-04-07T23:52:14.837Z"
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** A portfolio that looks and reads like a real person made it — not an AI template.
-**Current focus:** Phase 02 — design-system
+**Current focus:** Phase 03 — content-case-studies
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (content-case-studies) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: Not started
 | Phase 02-design-system P02 | 5 | 2 tasks | 4 files |
 | Phase 02-design-system P03 | 3 | 1 tasks | 1 files |
 | Phase 02-design-system P04 | 12 | 2 tasks | 3 files |
+| Phase 03-content-case-studies P01 | 209 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02-design-system]: Tailwind CSS 4 --text-{name}--line-height companion properties co-apply with font-size token — no separate leading-* or tracking-* utilities needed in downstream components
 - [Phase 02-design-system]: Card/Button inline replacement in Contact.tsx — shadow-as-border pattern via var(--shadow-border)
 - [Phase 02-design-system]: Nav scrolled state switched to bg-map-white/95 — consistent with no-dark-mode design commitment
+- [Phase 03-content-case-studies]: async params (Next.js 15): params typed as Promise<{ slug: string }> — required pattern for Next.js 15 App Router
+- [Phase 03-content-case-studies]: case-studies.ts as single data file — all 4 studies co-located for easy cross-reference
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-07T23:07:53.163Z
-Stopped at: Completed 02-design-system plan 02-04-PLAN.md
+Last session: 2026-04-07T23:52:14.835Z
+Stopped at: Completed 03-content-case-studies plan 03-01-PLAN.md
 Resume file: None

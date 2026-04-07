@@ -18,11 +18,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Design System
 
-- [ ] **DSGN-01**: CSS custom properties for topographic theme tokens (line color, weight, spacing, accent, animation timing)
-- [ ] **DSGN-02**: Non-Inter typeface selected and implemented with intentional editorial type scale (display, heading, body, caption)
-- [ ] **DSGN-03**: Coral/red-orange accent color (#F05E3B range) defined as CSS token, used only where it earns its place
-- [ ] **DSGN-04**: Motion vocabulary defined — full motion and reduced motion variants
-- [ ] **DSGN-05**: Anti-slop checklist derived from research, applied as constraint at every phase
+- [x] **DSGN-01**: CSS custom properties for topographic theme tokens (line color, weight, spacing, accent, animation timing)
+- [x] **DSGN-02**: Non-Inter typeface selected and implemented with intentional editorial type scale (display, heading, body, caption)
+- [x] **DSGN-03**: Coral/red-orange accent color (#F05E3B range) defined as CSS token, used only where it earns its place
+- [x] **DSGN-04**: Motion vocabulary defined — full motion and reduced motion variants
+- [x] **DSGN-05**: Anti-slop checklist derived from research, applied as constraint at every phase
 
 ### Topographic Animation
 
@@ -35,24 +35,24 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content & Copy
 
-- [ ] **COPY-01**: All copy written in Max's actual voice (lowercase, direct, no buzzwords)
+- [x] **COPY-01**: All copy written in Max's actual voice (lowercase, direct, no buzzwords)
 - [ ] **COPY-02**: Hero text — specific, direct, not "innovative digital experiences"
 - [ ] **COPY-03**: About section with authentic personal content (climbing, lifting, cats, engineering philosophy)
-- [ ] **COPY-04**: Case study content for Tonos pulled from actual /Users/vtx/tonos codebase
-- [ ] **COPY-05**: Case study content for VTX pulled from actual /Users/vtx/vtx codebase
-- [ ] **COPY-06**: Case study content for APIMesh/Conway pulled from actual /Users/vtx/conway codebase
-- [ ] **COPY-07**: Case study content for awesome-mpp pulled from actual /Users/vtx/awesome-mpp repo
-- [ ] **COPY-08**: Each case study follows problem/approach/outcome structure with real technical specifics and at least one tradeoff or rejected alternative
+- [x] **COPY-04**: Case study content for Tonos pulled from actual /Users/vtx/tonos codebase
+- [x] **COPY-05**: Case study content for VTX pulled from actual /Users/vtx/vtx codebase
+- [x] **COPY-06**: Case study content for APIMesh/Conway pulled from actual /Users/vtx/conway codebase
+- [x] **COPY-07**: Case study content for awesome-mpp pulled from actual /Users/vtx/awesome-mpp repo
+- [x] **COPY-08**: Each case study follows problem/approach/outcome structure with real technical specifics and at least one tradeoff or rejected alternative
 - [ ] **COPY-09**: Experience descriptions for VertikalX, DocReserve, Data Mine with specific technical detail
 - [ ] **COPY-10**: Zero instances of any copy pattern from the top 50 AI slop list
 
 ### Case Study Pages
 
-- [ ] **CASE-01**: Route structure at /work/[slug] with generateStaticParams for 4 projects
-- [ ] **CASE-02**: Case study data stored as TypeScript objects (no MDX, no CMS)
-- [ ] **CASE-03**: Each case study page is scannable in 90 seconds — hook, approach, result
-- [ ] **CASE-04**: Links to live demos and/or GitHub repos where available
-- [ ] **CASE-05**: Tech stack specifics visible per project (actual library names, not "modern stack")
+- [x] **CASE-01**: Route structure at /work/[slug] with generateStaticParams for 4 projects
+- [x] **CASE-02**: Case study data stored as TypeScript objects (no MDX, no CMS)
+- [x] **CASE-03**: Each case study page is scannable in 90 seconds — hook, approach, result
+- [x] **CASE-04**: Links to live demos and/or GitHub repos where available
+- [x] **CASE-05**: Tech stack specifics visible per project (actual library names, not "modern stack")
 
 ### Home Page Sections
 
@@ -66,13 +66,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Anti-Slop Compliance
 
-- [ ] **SLOP-01**: No Inter typeface
-- [ ] **SLOP-02**: No purple-to-blue gradients, gradient orbs, or gradient mesh backgrounds
+- [x] **SLOP-01**: No Inter typeface
+- [x] **SLOP-02**: No purple-to-blue gradients, gradient orbs, or gradient mesh backgrounds
 - [ ] **SLOP-03**: No bento grid layout
 - [ ] **SLOP-04**: No typewriter animation on hero
 - [ ] **SLOP-05**: No uniform fade-in-on-scroll on every section
 - [x] **SLOP-06**: No particle systems, star fields, or floating 3D objects
-- [ ] **SLOP-07**: No glassmorphism or frosted glass effects
+- [x] **SLOP-07**: No glassmorphism or frosted glass effects
 - [ ] **SLOP-08**: No skill bars, progress bars, or percentage indicators
 - [ ] **SLOP-09**: No technology badge/logo grid
 - [ ] **SLOP-10**: No generic CTAs ("let's build something amazing", "available for opportunities")
@@ -126,32 +126,32 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Complete |
-| DSGN-01 | Phase 2 | Pending |
-| DSGN-02 | Phase 2 | Pending |
-| DSGN-03 | Phase 2 | Pending |
-| DSGN-04 | Phase 2 | Pending |
-| DSGN-05 | Phase 2 | Pending |
+| DSGN-01 | Phase 2 | Complete |
+| DSGN-02 | Phase 2 | Complete |
+| DSGN-03 | Phase 2 | Complete |
+| DSGN-04 | Phase 2 | Complete |
+| DSGN-05 | Phase 2 | Complete |
 | TOPO-01 | Phase 4 | Pending |
 | TOPO-02 | Phase 4 | Pending |
 | TOPO-03 | Phase 4 | Pending |
 | TOPO-04 | Phase 4 | Pending |
 | TOPO-05 | Phase 4 | Pending |
 | TOPO-06 | Phase 4 | Pending |
-| COPY-01 | Phase 3 | Pending |
+| COPY-01 | Phase 3 | Complete |
 | COPY-02 | Phase 5 | Pending |
 | COPY-03 | Phase 5 | Pending |
-| COPY-04 | Phase 3 | Pending |
-| COPY-05 | Phase 3 | Pending |
-| COPY-06 | Phase 3 | Pending |
-| COPY-07 | Phase 3 | Pending |
-| COPY-08 | Phase 3 | Pending |
+| COPY-04 | Phase 3 | Complete |
+| COPY-05 | Phase 3 | Complete |
+| COPY-06 | Phase 3 | Complete |
+| COPY-07 | Phase 3 | Complete |
+| COPY-08 | Phase 3 | Complete |
 | COPY-09 | Phase 5 | Pending |
 | COPY-10 | Phase 6 | Pending |
-| CASE-01 | Phase 3 | Pending |
-| CASE-02 | Phase 3 | Pending |
-| CASE-03 | Phase 6 | Pending |
-| CASE-04 | Phase 3 | Pending |
-| CASE-05 | Phase 3 | Pending |
+| CASE-01 | Phase 3 | Complete |
+| CASE-02 | Phase 3 | Complete |
+| CASE-03 | Phase 6 | Complete |
+| CASE-04 | Phase 3 | Complete |
+| CASE-05 | Phase 3 | Complete |
 | HOME-01 | Phase 5 | Pending |
 | HOME-02 | Phase 5 | Pending |
 | HOME-03 | Phase 5 | Pending |
@@ -159,13 +159,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | HOME-05 | Phase 5 | Pending |
 | HOME-06 | Phase 5 | Pending |
 | HOME-07 | Phase 5 | Pending |
-| SLOP-01 | Phase 2 | Pending |
-| SLOP-02 | Phase 2 | Pending |
+| SLOP-01 | Phase 2 | Complete |
+| SLOP-02 | Phase 2 | Complete |
 | SLOP-03 | Phase 5 | Pending |
 | SLOP-04 | Phase 5 | Pending |
 | SLOP-05 | Phase 5 | Pending |
 | SLOP-06 | Phase 1 | Complete |
-| SLOP-07 | Phase 2 | Pending |
+| SLOP-07 | Phase 2 | Complete |
 | SLOP-08 | Phase 5 | Pending |
 | SLOP-09 | Phase 5 | Pending |
 | SLOP-10 | Phase 5 | Pending |
