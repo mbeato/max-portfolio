@@ -13,7 +13,7 @@ Six phases transform the existing AI-template portfolio into a topographic-theme
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation Cleanup** - Remove 3D/legacy tech and establish clean baseline (completed 2026-04-07)
-- [ ] **Phase 2: Design System** - Implement topographic tokens, typography, and motion vocabulary
+- [x] **Phase 2: Design System** - Implement topographic tokens, typography, and motion vocabulary (completed 2026-04-07)
 - [ ] **Phase 3: Content & Case Studies** - Extract real content from codebases, build case study pages
 - [ ] **Phase 4: Topographic Animation** - Build the hero canvas animation and SVG section accents
 - [ ] **Phase 5: Home Page Assembly** - Wire all home sections together with final copy and navigation
@@ -48,13 +48,13 @@ Plans:
   3. Coral Peak (#E8523F) is the sole accent token and appears in code only where DESIGN.md designates it
   4. Motion variants are defined for full-motion and prefers-reduced-motion states — components consume these, not inline values
   5. The anti-slop checklist from DESIGN.md section 9 is applied as a phase gate — no Inter, no gradients, no glassmorphism present
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [x] 02-01-PLAN.md — CSS design tokens (@theme block), typography (Space Grotesk + JetBrains Mono), MotionProvider
 - [x] 02-02-PLAN.md — Motion vocabulary (motion.ts), anti-slop checklist, import migration
 - [x] 02-03-PLAN.md — Type scale tokens (DESIGN.md section 3 font-size/line-height/letter-spacing in @theme)
-- [ ] 02-04-PLAN.md — Component color migration (Contact, Navigation, AccessibilityMenu to coral/stone, remove dark:/glassmorphism)
+- [x] 02-04-PLAN.md — Component color migration (Contact, Navigation, AccessibilityMenu to coral/stone, remove dark:/glassmorphism)
 
 **UI hint**: yes
 
@@ -119,7 +119,7 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation Cleanup | 3/3 | Complete   | 2026-04-07 |
-| 2. Design System | 3/4 | In Progress|  |
+| 2. Design System | 4/4 | Complete   | 2026-04-07 |
 | 3. Content & Case Studies | 0/TBD | Not started | - |
 | 4. Topographic Animation | 0/TBD | Not started | - |
 | 5. Home Page Assembly | 0/TBD | Not started | - |
