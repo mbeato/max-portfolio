@@ -135,7 +135,7 @@ export default function Contact({ id }: ContactProps) {
     <section
       ref={ref}
       id={id}
-      className="py-24 bg-white dark:bg-gray-950"
+      className="py-24 bg-map-white"
     >
       <div
         id={generateElementId('contact', 'container', 'main')}
@@ -152,10 +152,10 @@ export default function Contact({ id }: ContactProps) {
             variants={fadeInUp}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Let&apos;s Work Together
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-stone-500 max-w-3xl mx-auto">
               Have a project in mind or just want to chat about technology?
               I&apos;d love to hear from you!
             </p>
@@ -172,10 +172,10 @@ export default function Contact({ id }: ContactProps) {
               className="space-y-8"
             >
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                <h3 className="text-2xl font-bold text-stone-900 mb-6">
                   Get In Touch
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                <p className="text-stone-500 mb-8 leading-relaxed">
                   Whether you&apos;re looking to collaborate on a project, need help with development,
                   or just want to connect with a fellow developer, I&apos;m always open to interesting
                   conversations and opportunities.
@@ -190,17 +190,17 @@ export default function Contact({ id }: ContactProps) {
               >
                 <motion.div
                   id={generateElementId('contact', 'detail', 'email')}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-stone-50 hover:bg-stone-100 transition-colors"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <div className="p-2 bg-stone-100 rounded-lg">
+                    <Mail className="w-5 h-5 text-coral-peak" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">Email</p>
+                    <p className="font-medium text-stone-900">Email</p>
                     <a
                       href={`mailto:${SITE_CONFIG.email}`}
-                      className="text-blue-600 dark:text-blue-400 hover:underline transition-colors"
+                      className="text-coral-peak hover:underline transition-colors"
                     >
                       {SITE_CONFIG.email}
                     </a>
@@ -209,31 +209,31 @@ export default function Contact({ id }: ContactProps) {
 
                 <motion.div
                   id={generateElementId('contact', 'detail', 'location')}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-stone-50 hover:bg-stone-100 transition-colors"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                    <MapPin className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  <div className="p-2 bg-stone-100 rounded-lg">
+                    <MapPin className="w-5 h-5 text-stone-700" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">Location</p>
-                    <p className="text-gray-600 dark:text-gray-400">{SITE_CONFIG.location}</p>
+                    <p className="font-medium text-stone-900">Location</p>
+                    <p className="text-stone-500">{SITE_CONFIG.location}</p>
                   </div>
                 </motion.div>
 
                 <motion.div
                   id={generateElementId('contact', 'detail', 'timezone')}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-stone-50"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <div className="w-5 h-5 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-bold">
+                  <div className="p-2 bg-stone-100 rounded-lg">
+                    <div className="w-5 h-5 text-stone-700 flex items-center justify-center text-xs font-bold">
                       🕐
                     </div>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">Timezone</p>
-                    <p className="text-gray-600 dark:text-gray-400">{SITE_CONFIG.timezone}</p>
+                    <p className="font-medium text-stone-900">Timezone</p>
+                    <p className="text-stone-500">{SITE_CONFIG.timezone}</p>
                   </div>
                 </motion.div>
               </div>
@@ -242,7 +242,7 @@ export default function Contact({ id }: ContactProps) {
               <div
                 id={generateElementId('contact', 'social', 'section')}
               >
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h4 className="text-lg font-semibold text-stone-900 mb-4">
                   Connect With Me
                 </h4>
                 <div
@@ -258,14 +258,14 @@ export default function Contact({ id }: ContactProps) {
                         href={social.url}
                         target={social.name !== 'Email' ? '_blank' : '_self'}
                         rel={social.name !== 'Email' ? 'noopener noreferrer' : undefined}
-                        className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group"
+                        className="p-3 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors group"
                         whileHover={{ scale: 1.1, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.5 + index * 0.1 }}
                       >
-                        <IconComponent className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+                        <IconComponent className="w-5 h-5 text-stone-500 group-hover:text-stone-900 transition-colors" />
                         <span className="sr-only">{social.name}</span>
                       </motion.a>
                     )
@@ -282,7 +282,8 @@ export default function Contact({ id }: ContactProps) {
               {/* Inline card wrapper — Card component was deleted in Phase 1 cleanup */}
               <div
                 id={generateElementId('contact', 'form', 'card')}
-                className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8 h-fit"
+                className="bg-map-white rounded-lg p-8 h-fit"
+                style={{ boxShadow: 'var(--shadow-border)' }}
               >
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                   <div
@@ -292,7 +293,7 @@ export default function Contact({ id }: ContactProps) {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        className="block text-sm font-medium text-stone-700 mb-2"
                       >
                         Name *
                       </label>
@@ -302,10 +303,10 @@ export default function Contact({ id }: ContactProps) {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
+                        className={`w-full px-4 py-2 border rounded-lg bg-map-white text-stone-900 focus:ring-2 focus:border-transparent transition-colors ${
                           errors.name
-                            ? 'border-red-500 focus:ring-red-500'
-                            : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                            ? 'border-error focus:ring-error'
+                            : 'border-stone-300 focus:ring-coral-peak'
                         }`}
                         placeholder="Your name"
                         disabled={formState === 'loading'}
@@ -314,7 +315,7 @@ export default function Contact({ id }: ContactProps) {
                         <motion.p
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mt-1 text-sm text-red-600 dark:text-red-400"
+                          className="mt-1 text-sm text-error"
                         >
                           {errors.name}
                         </motion.p>
@@ -324,7 +325,7 @@ export default function Contact({ id }: ContactProps) {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        className="block text-sm font-medium text-stone-700 mb-2"
                       >
                         Email *
                       </label>
@@ -334,10 +335,10 @@ export default function Contact({ id }: ContactProps) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
+                        className={`w-full px-4 py-2 border rounded-lg bg-map-white text-stone-900 focus:ring-2 focus:border-transparent transition-colors ${
                           errors.email
-                            ? 'border-red-500 focus:ring-red-500'
-                            : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                            ? 'border-error focus:ring-error'
+                            : 'border-stone-300 focus:ring-coral-peak'
                         }`}
                         placeholder="your.email@example.com"
                         disabled={formState === 'loading'}
@@ -346,7 +347,7 @@ export default function Contact({ id }: ContactProps) {
                         <motion.p
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mt-1 text-sm text-red-600 dark:text-red-400"
+                          className="mt-1 text-sm text-error"
                         >
                           {errors.email}
                         </motion.p>
@@ -357,7 +358,7 @@ export default function Contact({ id }: ContactProps) {
                   <div id={generateElementId('contact', 'form', 'subject-field')}>
                     <label
                       htmlFor="subject"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      className="block text-sm font-medium text-stone-700 mb-2"
                     >
                       Subject *
                     </label>
@@ -367,10 +368,10 @@ export default function Contact({ id }: ContactProps) {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
+                      className={`w-full px-4 py-2 border rounded-lg bg-map-white text-stone-900 focus:ring-2 focus:border-transparent transition-colors ${
                         errors.subject
-                          ? 'border-red-500 focus:ring-red-500'
-                          : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                          ? 'border-error focus:ring-error'
+                          : 'border-stone-300 focus:ring-coral-peak'
                       }`}
                       placeholder="What would you like to discuss?"
                       disabled={formState === 'loading'}
@@ -379,7 +380,7 @@ export default function Contact({ id }: ContactProps) {
                       <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                        className="mt-1 text-sm text-error"
                       >
                         {errors.subject}
                       </motion.p>
@@ -389,7 +390,7 @@ export default function Contact({ id }: ContactProps) {
                   <div id={generateElementId('contact', 'form', 'message-field')}>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      className="block text-sm font-medium text-stone-700 mb-2"
                     >
                       Message *
                     </label>
@@ -399,10 +400,10 @@ export default function Contact({ id }: ContactProps) {
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={6}
-                      className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors resize-none ${
+                      className={`w-full px-4 py-2 border rounded-lg bg-map-white text-stone-900 focus:ring-2 focus:border-transparent transition-colors resize-none ${
                         errors.message
-                          ? 'border-red-500 focus:ring-red-500'
-                          : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
+                          ? 'border-error focus:ring-error'
+                          : 'border-stone-300 focus:ring-coral-peak'
                       }`}
                       placeholder="Tell me about your project or just say hello!"
                       disabled={formState === 'loading'}
@@ -411,7 +412,7 @@ export default function Contact({ id }: ContactProps) {
                       <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                        className="mt-1 text-sm text-error"
                       >
                         {errors.message}
                       </motion.p>
@@ -424,7 +425,7 @@ export default function Contact({ id }: ContactProps) {
                       id={generateElementId('contact', 'form', 'success-message')}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 p-4 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg"
+                      className="flex items-center gap-2 p-4 bg-success/10 text-success rounded-lg"
                     >
                       <CheckCircle className="w-5 h-5" />
                       <div>
@@ -439,7 +440,7 @@ export default function Contact({ id }: ContactProps) {
                       id={generateElementId('contact', 'form', 'error-message')}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 p-4 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg"
+                      className="flex items-center gap-2 p-4 bg-error/10 text-error rounded-lg"
                     >
                       <AlertCircle className="w-5 h-5" />
                       <div>
@@ -454,7 +455,7 @@ export default function Contact({ id }: ContactProps) {
                     id={generateElementId('contact', 'form', 'submit-button')}
                     type="submit"
                     disabled={formState === 'loading' || formState === 'success'}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-lg hover:bg-gray-700 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-stone-900 text-map-white font-semibold rounded-lg hover:bg-stone-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     whileHover={formState === 'idle' ? { scale: 1.02 } : {}}
                     whileTap={formState === 'idle' ? { scale: 0.98 } : {}}
                   >
@@ -470,7 +471,7 @@ export default function Contact({ id }: ContactProps) {
                   {/* Demo Mode Notice */}
                   {!EMAIL_CONFIG.serviceId && (
                     <div className="text-center">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-stone-500">
                         <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
                         Demo Mode: Form submissions are simulated
                       </p>
