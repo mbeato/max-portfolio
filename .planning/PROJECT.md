@@ -59,7 +59,7 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 - **APIMesh/Conway** (/Users/vtx/conway) — 27 pay-per-call web analysis APIs with autonomous LLM-driven API generation. Bun + Hono + x402 micropayments.
 - **awesome-mpp** (/Users/vtx/awesome-mpp) — Curated registry of 100+ Machine Payments Protocol projects, SDKs, and tools.
 
-**Design direction:** Minimalist topographic contour lines as the unifying theme. White backgrounds, black contour lines with animated wave/pulse effects. Coral/red-orange (#F05E3B range) as the accent. No component library aesthetics — hand-crafted cards, typography, and layout. Animations should feel organic and deep, not decorative.
+**Design system:** Fully specified in `DESIGN.md` at project root. All phases that touch UI must read DESIGN.md before implementation. Key specs: Map White (#FAFAF9), Contour Black (#1A1A1A), Coral Peak (#E8523F), shadow-as-border technique, non-Inter editorial typeface, 4-level depth system, 15-point anti-slop checklist. See DESIGN.md sections 2-4 for exact hex values, component styles, and typography scale.
 
 **Anti-patterns to avoid (AI slop):** Generic hero copy ("innovative digital experiences"), overused gradient orbs, particle systems as filler, template card layouts, buzzword-heavy descriptions, cookie-cutter CTAs, predictable scroll animations, shadcn/MUI default aesthetics.
 
