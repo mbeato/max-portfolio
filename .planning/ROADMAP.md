@@ -68,7 +68,12 @@ Plans:
   3. Tech stack on each page shows actual library names (e.g., "Bun + Hono + x402" not "modern backend stack")
   4. All copy is in Max's voice — lowercase, direct, no buzzwords, no "innovative" or "passionate developer" anywhere
   5. Links to live demos and/or GitHub repos are present where available for each project
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Route infrastructure, UI components, and all 4 case study data objects with real codebase content
+- [ ] 03-02-PLAN.md — Anti-slop gate verification and visual/content checkpoint
+
 **UI hint**: yes
 
 ### Phase 4: Topographic Animation
@@ -120,7 +125,7 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 |-------|----------------|--------|-----------|
 | 1. Foundation Cleanup | 3/3 | Complete   | 2026-04-07 |
 | 2. Design System | 4/4 | Complete   | 2026-04-07 |
-| 3. Content & Case Studies | 0/TBD | Not started | - |
+| 3. Content & Case Studies | 0/2 | In Progress | - |
 | 4. Topographic Animation | 0/TBD | Not started | - |
 | 5. Home Page Assembly | 0/TBD | Not started | - |
 | 6. Polish & Performance | 0/TBD | Not started | - |
