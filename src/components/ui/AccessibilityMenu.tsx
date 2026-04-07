@@ -85,7 +85,7 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
       <motion.button
         id={generateElementId('accessibility', 'menu', 'trigger')}
         onClick={handleToggleMenu}
-        className="fixed bottom-4 left-4 z-50 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="fixed bottom-4 left-4 z-50 p-3 bg-stone-900 hover:bg-stone-700 text-map-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 focus:ring-2 focus:ring-coral-peak focus:ring-offset-2"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         aria-label={`${isOpen ? 'Close' : 'Open'} accessibility menu`}
@@ -108,7 +108,7 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/50"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -117,28 +117,29 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -300 }}
               transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-              className="absolute left-4 bottom-20 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+              className="absolute left-4 bottom-20 w-80 bg-map-white rounded-lg overflow-hidden"
+              style={{ boxShadow: 'var(--shadow-lifted)' }}
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-labelledby={generateElementId('accessibility', 'menu', 'title')}
               aria-describedby={generateElementId('accessibility', 'menu', 'description')}
             >
               {/* Header */}
-              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="p-6 border-b border-stone-200">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <Settings className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <div className="p-2 bg-stone-100 rounded-lg">
+                    <Settings className="w-5 h-5 text-stone-700" />
                   </div>
-                  <h2 
+                  <h2
                     id={generateElementId('accessibility', 'menu', 'title')}
-                    className="text-lg font-semibold text-gray-900 dark:text-white"
+                    className="text-lg font-semibold text-stone-900"
                   >
                     Accessibility Settings
                   </h2>
                 </div>
-                <p 
+                <p
                   id={generateElementId('accessibility', 'menu', 'description')}
-                  className="text-sm text-gray-600 dark:text-gray-400"
+                  className="text-sm text-stone-500"
                 >
                   Customize your viewing experience for better accessibility
                 </p>
@@ -155,21 +156,21 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-lg hover:bg-stone-50 transition-colors"
                     >
                       <div className="flex items-center gap-3 flex-1">
                         <div className={`p-2 rounded-lg ${
-                          option.enabled 
-                            ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' 
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                          option.enabled
+                            ? 'bg-success/10 text-success'
+                            : 'bg-stone-100 text-stone-500'
                         }`}>
                           <IconComponent className="w-4 h-4" />
                         </div>
                         <div>
-                          <h3 className="font-medium text-gray-900 dark:text-white">
+                          <h3 className="font-medium text-stone-900">
                             {option.label}
                           </h3>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                          <p className="text-xs text-stone-500">
                             {option.description}
                           </p>
                         </div>
@@ -178,10 +179,10 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
                       <motion.button
                         onClick={option.toggle}
                         disabled={option.readOnly && option.enabled}
-                        className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                        className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:ring-2 focus:ring-coral-peak focus:ring-offset-2 ${
                           option.enabled
-                            ? 'bg-blue-600' 
-                            : 'bg-gray-300 dark:bg-gray-600'
+                            ? 'bg-coral-peak'
+                            : 'bg-stone-300'
                         } ${
                           option.readOnly && option.enabled 
                             ? 'opacity-50 cursor-not-allowed' 
@@ -209,16 +210,16 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
+                    className="flex items-center gap-3 p-3 bg-stone-50 rounded-lg"
                   >
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <Volume2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <div className="p-2 bg-stone-100 rounded-lg">
+                      <Volume2 className="w-4 h-4 text-stone-700" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-blue-900 dark:text-blue-100">
+                      <h3 className="font-medium text-stone-900">
                         Screen Reader Detected
                       </h3>
-                      <p className="text-xs text-blue-700 dark:text-blue-200">
+                      <p className="text-xs text-stone-500">
                         Enhanced screen reader support is active
                       </p>
                     </div>
@@ -227,10 +228,10 @@ export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
               </div>
 
               {/* Footer */}
-              <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="p-4 border-t border-stone-200">
                 <button
                   onClick={resetSettings}
-                  className="flex items-center gap-2 w-full p-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="flex items-center gap-2 w-full p-2 text-sm text-stone-500 hover:text-stone-900 transition-colors rounded-lg hover:bg-stone-50"
                 >
                   <RotateCcw className="w-4 h-4" />
                   Reset to Defaults

@@ -34,7 +34,7 @@ export default function Navigation({ id }: NavigationProps) {
       className={cn(
         'fixed top-1 left-0 right-0 z-40 transition-all duration-500 ease-out',
         isScrolled 
-          ? 'bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-blue-800/30' 
+          ? 'bg-map-white/95 shadow-lg border-b border-stone-200'
           : 'bg-transparent'
       )}
     >
@@ -55,7 +55,7 @@ export default function Navigation({ id }: NavigationProps) {
             <button
               id={generateElementId('navigation', 'logo', 'button')}
               onClick={() => handleNavClick('#hero')}
-              className="text-2xl font-bold text-white hover:text-blue-400 transition-colors"
+              className="text-2xl font-bold text-stone-900 hover:text-coral-peak transition-colors"
             >
               {SITE_CONFIG.name.split(' ').map((word, index) => (
                 <span key={index}>
@@ -75,7 +75,7 @@ export default function Navigation({ id }: NavigationProps) {
                 key={item.id}
                 id={item.id}
                 onClick={() => handleNavClick(item.href)}
-                className="text-gray-300 hover:text-blue-400 font-medium transition-colors"
+                className="text-stone-500 hover:text-coral-peak font-medium transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: -20 }}
@@ -97,7 +97,7 @@ export default function Navigation({ id }: NavigationProps) {
                 link.click()
                 document.body.removeChild(link)
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-coral-peak hover:bg-coral-deep text-map-white rounded-lg font-medium transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -117,7 +117,7 @@ export default function Navigation({ id }: NavigationProps) {
             <motion.button
               id={generateElementId('navigation', 'mobile', 'menu-button')}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-300 hover:text-blue-400"
+              className="text-stone-500 hover:text-coral-peak"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -138,7 +138,7 @@ export default function Navigation({ id }: NavigationProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-slate-900 border-t border-blue-800/30"
+              className="md:hidden bg-map-white border-t border-stone-200"
             >
               <div 
                 id={generateElementId('navigation', 'mobile', 'menu-content')}
@@ -149,7 +149,7 @@ export default function Navigation({ id }: NavigationProps) {
                     key={`mobile-${item.id}`}
                     id={`mobile-${item.id}`}
                     onClick={() => handleNavClick(item.href)}
-                    className="block w-full text-left text-gray-300 hover:text-blue-400 font-medium py-2"
+                    className="block w-full text-left text-stone-500 hover:text-coral-peak font-medium py-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -171,7 +171,7 @@ export default function Navigation({ id }: NavigationProps) {
                     document.body.removeChild(link)
                     setIsMobileMenuOpen(false)
                   }}
-                  className="flex items-center gap-2 w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors mt-4"
+                  className="flex items-center gap-2 w-full px-4 py-3 bg-coral-peak hover:bg-coral-deep text-map-white rounded-lg font-medium transition-colors mt-4"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: NAVIGATION.length * 0.1 }}
