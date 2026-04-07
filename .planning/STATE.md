@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase complete — ready for verification
-stopped_at: Completed 01-foundation-cleanup plan 01-03-PLAN.md
-last_updated: "2026-04-07T19:42:39.971Z"
+status: Ready to execute
+stopped_at: Completed 02-design-system plan 02-01-PLAN.md
+last_updated: "2026-04-07T20:18:40.779Z"
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** A portfolio that looks and reads like a real person made it — not an AI template.
-**Current focus:** Phase 01 — foundation-cleanup
+**Current focus:** Phase 02 — design-system
 
 ## Current Position
 
-Phase: 01 (foundation-cleanup) — EXECUTING
-Plan: 3 of 3
+Phase: 02 (design-system) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Plan: 3 of 3
 | Phase 01-foundation-cleanup P01 | 70 | 2 tasks | 17 files |
 | Phase 01-foundation-cleanup P02 | 234 | 2 tasks | 11 files |
 | Phase 01-foundation-cleanup P03 | 31536459 | 2 tasks | 5 files |
+| Phase 02-design-system P01 | 15 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-cleanup]: About.tsx bio text and photo paths preserved as JSX comments for Phase 5 reference
 - [Phase 01-foundation-cleanup]: Contact.tsx Card/Button imports replaced with inline equivalents after deleted components — preserves all form functionality
 - [Phase 01-foundation-cleanup]: Lighthouse baseline recorded before Phase 2: Performance 98, Accessibility 94, Best Practices 100, SEO 100
+- [Phase 02-design-system]: Space Grotesk selected as primary font (confirmed in next/font/google registry; Satoshi/General Sans are not)
+- [Phase 02-design-system]: Font CSS vars use distinct names (--font-space-grotesk) then @theme --font-sans points to them — avoids Tailwind namespace collision
+- [Phase 02-design-system]: MotionProvider is a separate client component file — layout.tsx stays a server component
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-07T19:42:39.968Z
-Stopped at: Completed 01-foundation-cleanup plan 01-03-PLAN.md
+Last session: 2026-04-07T20:18:40.776Z
+Stopped at: Completed 02-design-system plan 02-01-PLAN.md
 Resume file: None
