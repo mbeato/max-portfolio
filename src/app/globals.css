@@ -12,13 +12,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -68,20 +61,6 @@ html {
   background: #64748b;
 }
 
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background: #1f2937;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #4b5563;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-}
-
 /* Focus styles for accessibility */
 *:focus-visible {
   outline: 2px solid #3b82f6;
@@ -97,31 +76,6 @@ html {
 ::-moz-selection {
   background: rgba(59, 130, 246, 0.2);
   color: #1e40af;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::selection {
-    color: #93c5fd;
-  }
-  
-  ::-moz-selection {
-    color: #93c5fd;
-  }
-}
-
-/* Glass morphism utility */
-.glass {
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-@media (prefers-color-scheme: dark) {
-  .glass {
-    background: rgba(17, 24, 39, 0.7);
-    border: 1px solid rgba(75, 85, 99, 0.2);
-  }
 }
 
 /* Respect reduced motion preferences */

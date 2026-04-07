@@ -69,9 +69,6 @@ export interface ContactForm {
   message: string
 }
 
-// Theme types
-export type Theme = 'light' | 'dark' | 'system'
-
 // Animation variants
 export interface AnimationVariant {
   initial: Record<string, unknown>
@@ -149,29 +146,9 @@ export interface ScrollPosition {
   progress: number // 0-1 based on document height
 }
 
-// Three.js related types
-export interface Vector3 {
-  x: number
-  y: number
-  z: number
-}
-
-export interface Rotation {
-  x: number
-  y: number
-  z: number
-}
-
 // Component ref types for imperative actions
 export interface AnimatedComponentRef {
   triggerAnimation: () => void
   resetAnimation: () => void
 }
 
-// Filter options for projects
-export interface ProjectFilters {
-  category?: Project['category']
-  technology?: string
-  status?: Project['status']
-  search?: string
-}

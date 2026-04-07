@@ -221,31 +221,6 @@ export const SEO_DEFAULTS = {
   }
 } as const
 
-// Theme configuration
-export const THEME_CONFIG = {
-  storageKey: "portfolio-theme",
-  defaultTheme: "system" as const,
-  themes: ["light", "dark", "system"] as const
-} as const
-
-// 3D scene configuration
-export const THREE_CONFIG = {
-  camera: {
-    position: [0, 0, 5] as [number, number, number],
-    fov: 75
-  },
-  renderer: {
-    antialias: true,
-    alpha: true
-  },
-  controls: {
-    enableZoom: false,
-    enablePan: false,
-    autoRotate: true,
-    autoRotateSpeed: 0.5
-  }
-} as const
-
 // Error messages
 export const ERROR_MESSAGES = {
   generic: "Something went wrong. Please try again.",
