@@ -4,8 +4,6 @@ import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Send, MapPin, Mail, Github, Linkedin, CheckCircle, AlertCircle } from 'lucide-react'
 import emailjs from '@emailjs/browser'
-import { Card } from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
 import { SITE_CONFIG, SOCIAL_LINKS, EMAIL_CONFIG, FORM_VALIDATION } from '@/lib/constants'
 import { fadeInUp, staggerContainer, generateElementId } from '@/lib/utils'
 import { useScrollAnimation } from '@/hooks/useIntersectionObserver'
@@ -65,7 +63,7 @@ export default function Contact({ id }: ContactProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
@@ -78,11 +76,11 @@ export default function Contact({ id }: ContactProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
-    
+
     setFormState('loading')
 
     try {
@@ -90,7 +88,7 @@ export default function Contact({ id }: ContactProps) {
       if (EMAIL_CONFIG.serviceId && EMAIL_CONFIG.templateId && EMAIL_CONFIG.publicKey && formRef.current) {
         // Initialize EmailJS (in production, this would be done in _app.tsx)
         emailjs.init(EMAIL_CONFIG.publicKey)
-        
+
         const templateParams = {
           from_name: formData.name,
           from_email: formData.email,
@@ -112,10 +110,10 @@ export default function Contact({ id }: ContactProps) {
 
       setFormState('success')
       setFormData({ name: '', email: '', subject: '', message: '' })
-      
+
       // Reset form state after 5 seconds
       setTimeout(() => setFormState('idle'), 5000)
-      
+
     } catch (error) {
       console.error('Form submission error:', error)
       setFormState('error')
@@ -133,12 +131,12 @@ export default function Contact({ id }: ContactProps) {
   }
 
   return (
-    <section 
+    <section
       ref={ref}
       id={id}
       className="py-24 bg-white dark:bg-gray-950"
     >
-      <div 
+      <div
         id={generateElementId('contact', 'container', 'main')}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
@@ -157,16 +155,16 @@ export default function Contact({ id }: ContactProps) {
               Let&apos;s Work Together
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Have a project in mind or just want to chat about technology? 
+              Have a project in mind or just want to chat about technology?
               I&apos;d love to hear from you!
             </p>
           </motion.div>
 
-          <div 
+          <div
             id={generateElementId('contact', 'content', 'grid')}
             className="grid lg:grid-cols-2 gap-12"
           >
-            {/* Contact Information with 3D Earth */}
+            {/* Contact Information */}
             <motion.div
               id={generateElementId('contact', 'info', 'section')}
               variants={fadeInUp}
@@ -177,15 +175,15 @@ export default function Contact({ id }: ContactProps) {
                   Get In Touch
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                  Whether you&apos;re looking to collaborate on a project, need help with development, 
-                  or just want to connect with a fellow developer, I&apos;m always open to interesting 
+                  Whether you&apos;re looking to collaborate on a project, need help with development,
+                  or just want to connect with a fellow developer, I&apos;m always open to interesting
                   conversations and opportunities.
                 </p>
               </div>
 
 
               {/* Contact Details */}
-              <div 
+              <div
                 id={generateElementId('contact', 'details', 'list')}
                 className="space-y-4"
               >
@@ -199,7 +197,7 @@ export default function Contact({ id }: ContactProps) {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">Email</p>
-                    <a 
+                    <a
                       href={`mailto:${SITE_CONFIG.email}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline transition-colors"
                     >
@@ -240,13 +238,13 @@ export default function Contact({ id }: ContactProps) {
               </div>
 
               {/* Social Links */}
-              <div 
+              <div
                 id={generateElementId('contact', 'social', 'section')}
               >
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Connect With Me
                 </h4>
-                <div 
+                <div
                   id={generateElementId('contact', 'social', 'links')}
                   className="flex gap-4"
                 >
@@ -280,19 +278,18 @@ export default function Contact({ id }: ContactProps) {
               id={generateElementId('contact', 'form', 'section')}
               variants={fadeInUp}
             >
-              <Card 
+              {/* Inline card wrapper — Card component was deleted in Phase 1 cleanup */}
+              <div
                 id={generateElementId('contact', 'form', 'card')}
-                variant="elevated"
-                padding="lg"
-                className="h-fit"
+                className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8 h-fit"
               >
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                  <div 
+                  <div
                     id={generateElementId('contact', 'form', 'name-email-fields')}
                     className="grid sm:grid-cols-2 gap-4"
                   >
                     <div>
-                      <label 
+                      <label
                         htmlFor="name"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
@@ -305,8 +302,8 @@ export default function Contact({ id }: ContactProps) {
                         value={formData.name}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
-                          errors.name 
-                            ? 'border-red-500 focus:ring-red-500' 
+                          errors.name
+                            ? 'border-red-500 focus:ring-red-500'
                             : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
                         }`}
                         placeholder="Your name"
@@ -322,9 +319,9 @@ export default function Contact({ id }: ContactProps) {
                         </motion.p>
                       )}
                     </div>
-                    
+
                     <div>
-                      <label 
+                      <label
                         htmlFor="email"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
@@ -337,8 +334,8 @@ export default function Contact({ id }: ContactProps) {
                         value={formData.email}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
-                          errors.email 
-                            ? 'border-red-500 focus:ring-red-500' 
+                          errors.email
+                            ? 'border-red-500 focus:ring-red-500'
                             : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
                         }`}
                         placeholder="your.email@example.com"
@@ -357,7 +354,7 @@ export default function Contact({ id }: ContactProps) {
                   </div>
 
                   <div id={generateElementId('contact', 'form', 'subject-field')}>
-                    <label 
+                    <label
                       htmlFor="subject"
                       className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
@@ -370,8 +367,8 @@ export default function Contact({ id }: ContactProps) {
                       value={formData.subject}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors ${
-                        errors.subject 
-                          ? 'border-red-500 focus:ring-red-500' 
+                        errors.subject
+                          ? 'border-red-500 focus:ring-red-500'
                           : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
                       }`}
                       placeholder="What would you like to discuss?"
@@ -389,7 +386,7 @@ export default function Contact({ id }: ContactProps) {
                   </div>
 
                   <div id={generateElementId('contact', 'form', 'message-field')}>
-                    <label 
+                    <label
                       htmlFor="message"
                       className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                     >
@@ -402,8 +399,8 @@ export default function Contact({ id }: ContactProps) {
                       onChange={handleInputChange}
                       rows={6}
                       className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors resize-none ${
-                        errors.message 
-                          ? 'border-red-500 focus:ring-red-500' 
+                        errors.message
+                          ? 'border-red-500 focus:ring-red-500'
                           : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500'
                       }`}
                       placeholder="Tell me about your project or just say hello!"
@@ -451,29 +448,23 @@ export default function Contact({ id }: ContactProps) {
                     </motion.div>
                   )}
 
-                  <Button
+                  {/* Inline submit button — Button component was deleted in Phase 1 cleanup */}
+                  <motion.button
                     id={generateElementId('contact', 'form', 'submit-button')}
                     type="submit"
-                    size="lg"
-                    className="w-full"
-                    isLoading={formState === 'loading'}
-                    leftIcon={
-                      formState === 'success' ? <CheckCircle className="w-5 h-5" /> :
-                      formState === 'error' ? <AlertCircle className="w-5 h-5" /> :
-                      <Send className="w-5 h-5" />
-                    }
                     disabled={formState === 'loading' || formState === 'success'}
-                    asMotion
-                    motionProps={{
-                      whileHover: formState === 'idle' ? { scale: 1.02 } : {},
-                      whileTap: formState === 'idle' ? { scale: 0.98 } : {}
-                    }}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-lg hover:bg-gray-700 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    whileHover={formState === 'idle' ? { scale: 1.02 } : {}}
+                    whileTap={formState === 'idle' ? { scale: 0.98 } : {}}
                   >
-                    {formState === 'loading' ? 'Sending...' : 
+                    {formState === 'success' ? <CheckCircle className="w-5 h-5" /> :
+                     formState === 'error' ? <AlertCircle className="w-5 h-5" /> :
+                     <Send className="w-5 h-5" />}
+                    {formState === 'loading' ? 'Sending...' :
                      formState === 'success' ? 'Message Sent!' :
                      formState === 'error' ? 'Try Again' :
                      'Send Message'}
-                  </Button>
+                  </motion.button>
 
                   {/* Demo Mode Notice */}
                   {!EMAIL_CONFIG.serviceId && (
@@ -485,7 +476,7 @@ export default function Contact({ id }: ContactProps) {
                     </div>
                   )}
                 </form>
-              </Card>
+              </div>
             </motion.div>
           </div>
         </motion.div>

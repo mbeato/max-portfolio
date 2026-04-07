@@ -20,7 +20,8 @@ interface AccessibilityMenuProps {
   id: string
 }
 
-export default function AccessibilityMenu({ id: _ }: AccessibilityMenuProps) {
+export default function AccessibilityMenu({ id }: AccessibilityMenuProps) {
+  void id; // id is required by interface for accessibility element targeting
   const [isOpen, setIsOpen] = useState(false)
   const {
     highContrast,

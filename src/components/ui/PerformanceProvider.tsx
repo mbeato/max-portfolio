@@ -110,7 +110,7 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
         const entries = list.getEntries()
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & { renderTime?: number; loadTime?: number }
         if (lastEntry) {
-          setMetrics(prev => ({ ...prev, lcp: lastEntry.renderTime || lastEntry.loadTime }))
+          setMetrics(prev => ({ ...prev, lcp: lastEntry.renderTime ?? lastEntry.loadTime ?? null }))
         }
       })
 
@@ -123,8 +123,8 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
       // First Input Delay
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries() as Array<PerformanceEntry & { processingStart?: number }>) {
-          if (entry.name === 'first-input') {
-            setMetrics(prev => ({ ...prev, fid: entry.processingStart - entry.startTime }))
+          if (entry.name === 'first-input' && entry.processingStart !== undefined) {
+            setMetrics(prev => ({ ...prev, fid: entry.processingStart! - entry.startTime }))
           }
         }
       })
