@@ -48,7 +48,12 @@ Plans:
   3. Coral Peak (#E8523F) is the sole accent token and appears in code only where DESIGN.md designates it
   4. Motion variants are defined for full-motion and prefers-reduced-motion states — components consume these, not inline values
   5. The anti-slop checklist from DESIGN.md section 9 is applied as a phase gate — no Inter, no gradients, no glassmorphism present
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — CSS design tokens (@theme block), typography (Space Grotesk + JetBrains Mono), MotionProvider
+- [ ] 02-02-PLAN.md — Motion vocabulary (motion.ts), anti-slop checklist, import migration
+
 **UI hint**: yes
 
 ### Phase 3: Content & Case Studies
@@ -112,7 +117,7 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation Cleanup | 3/3 | Complete   | 2026-04-07 |
-| 2. Design System | 0/TBD | Not started | - |
+| 2. Design System | 0/2 | Not started | - |
 | 3. Content & Case Studies | 0/TBD | Not started | - |
 | 4. Topographic Animation | 0/TBD | Not started | - |
 | 5. Home Page Assembly | 0/TBD | Not started | - |

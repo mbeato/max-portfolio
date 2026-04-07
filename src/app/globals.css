@@ -1,81 +1,103 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === Color Palette (DESIGN.md section 2) === */
+  --color-map-white: #FAFAF9;
+  --color-contour-black: #1A1A1A;
+
+  /* Accent */
+  --color-coral-peak: #E8523F;
+  --color-coral-deep: #C7402F;
+
+  /* Neutral Scale */
+  --color-stone-900: #1A1A1A;
+  --color-stone-700: #404040;
+  --color-stone-500: #737373;
+  --color-stone-300: #D4D4D4;
+  --color-stone-200: #E5E5E5;
+  --color-stone-100: #F5F5F4;
+  --color-stone-50: #FAFAF9;
+
+  /* Functional */
+  --color-error: #DC2626;
+  --color-success: #16A34A;
+
+  /* === Typography === */
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* === Spacing (4px base, DESIGN.md section 5) === */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* === Border Radius (DESIGN.md section 5) === */
+  --radius-subtle: 3px;
+  --radius-standard: 4px;
+  --radius-comfortable: 6px;
+
+  /* === Animation Timing (DESIGN.md section 8) === */
+  --ease-contour: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-wave: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-draw: 800ms;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Shadow-as-border values — compound strings cannot live in @theme */
+:root {
+  --shadow-border: rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  --shadow-border-dark: rgba(0, 0, 0, 0.12) 0px 0px 0px 1px;
+  --shadow-hover: rgba(0, 0, 0, 0.04) 0px 1px 3px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  --shadow-lifted: rgba(0, 0, 0, 0.08) 0px 4px 12px -4px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  --shadow-focus: 0 0 0 2px #FAFAF9, 0 0 0 4px rgba(232, 82, 63, 0.5);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-map-white);
+  color: var(--color-stone-900);
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom animations */
-@keyframes tilt {
-  0%, 50%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(0.5deg);
-  }
-  75% {
-    transform: rotate(-0.5deg);
-  }
+/* Coral selection — single accent discipline (DSGN-03, SLOP-02) */
+::selection {
+  background: rgba(232, 82, 63, 0.15);
+  color: var(--color-stone-900);
 }
 
-.animate-tilt {
-  animation: tilt 10s infinite linear;
+/* Coral focus ring — keyboard navigation (DSGN-03) */
+*:focus-visible {
+  outline: 2px solid rgba(232, 82, 63, 0.5);
+  outline-offset: 2px;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar styling */
+/* Scrollbar — neutral stone palette */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-stone-50);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 9999px;
+  background: var(--color-stone-300);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
-}
-
-/* Focus styles for accessibility */
-*:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-/* Custom selection colors */
-::selection {
-  background: rgba(59, 130, 246, 0.2);
-  color: #1e40af;
-}
-
-::-moz-selection {
-  background: rgba(59, 130, 246, 0.2);
-  color: #1e40af;
+  background: var(--color-stone-500);
 }
 
 /* Respect reduced motion preferences */
