@@ -4,28 +4,6 @@ export function cn(...inputs: ClassValue[]) {
   return clsx(inputs)
 }
 
-
-// Common animation variants for Framer Motion
-export const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-}
-
-
-
-
-// Stagger animation for lists
-export const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-}
-
-
-
 // Utility for generating unique IDs following our convention
 export const generateElementId = (section: string, element: string, purpose: string) => {
   return `${section}-${element}-${purpose}`.toLowerCase().replace(/\s+/g, '-')
