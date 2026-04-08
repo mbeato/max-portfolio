@@ -97,7 +97,8 @@ export default function Navigation({ id }: NavigationProps) {
                 link.click()
                 document.body.removeChild(link)
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-coral-peak hover:bg-coral-deep text-map-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-stone-100 text-stone-900 font-medium transition-colors"
+              style={{ boxShadow: 'var(--shadow-border-dark)', borderRadius: 'var(--radius-standard)' }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -105,7 +106,7 @@ export default function Navigation({ id }: NavigationProps) {
               transition={{ delay: 0.4 }}
             >
               <Download className="w-4 h-4" />
-              Resume
+              resume
             </motion.button>
           </div>
 
@@ -171,7 +172,8 @@ export default function Navigation({ id }: NavigationProps) {
                     document.body.removeChild(link)
                     setIsMobileMenuOpen(false)
                   }}
-                  className="flex items-center gap-2 w-full px-4 py-3 bg-coral-peak hover:bg-coral-deep text-map-white rounded-lg font-medium transition-colors mt-4"
+                  className="flex items-center gap-2 w-full px-4 py-3 bg-transparent hover:bg-stone-100 text-stone-900 font-medium transition-colors mt-4"
+                  style={{ boxShadow: 'var(--shadow-border-dark)', borderRadius: 'var(--radius-standard)' }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: NAVIGATION.length * 0.1 }}
@@ -179,7 +181,7 @@ export default function Navigation({ id }: NavigationProps) {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Download className="w-4 h-4" />
-                  Download Resume
+                  resume
                 </motion.button>
               </div>
             </motion.div>
