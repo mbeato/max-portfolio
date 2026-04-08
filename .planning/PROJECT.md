@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A complete visual and content overhaul of Max's personal portfolio site. The current site reads as AI-generated template work — generic copy, overcooked animations, and no cohesive design direction. The redesign establishes a topographic contour line theme with monochrome palette and coral/red-orange accent, hand-crafted animations, and original copy. It showcases four real projects (Tonos, VTX, APIMesh, awesome-mpp) as dedicated case study pages, replaces all generic "innovative digital experiences" language with Max's actual voice, and delivers a site that recruiters, collaborators, and clients immediately recognize as built by someone with taste and engineering depth.
+A complete visual and content overhaul of Max's personal portfolio site. The current site reads as AI-generated template work — generic copy, overcooked animations, and no cohesive design direction. The redesign establishes a liquid physics / contour line visual identity with monochrome palette and coral/red-orange accent, hand-crafted animations, and original copy. The hero is an interactive puzzle gate — "Maximus Beato" letters scatter across the viewport, floating particles bob on a wave simulation surface, and visitors drag letters into place to unlock the portfolio. After solving, a wave burst radiates outward, particles scatter, and the rest of the site reveals. It showcases four real projects (Tonos, VTX, APIMesh, awesome-mpp) as dedicated case study pages, replaces all generic language with Max's actual voice, and delivers a site that recruiters, collaborators, and clients immediately recognize as built by someone with taste and engineering depth.
 
 ## Core Value
 
@@ -31,18 +31,15 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 
 ### Active
 
-- [ ] Topographic contour line theme across entire site (white background, black lines, wave/pulse animations)
-- [ ] Coral/red-orange accent color used sparingly but boldly throughout
-- [ ] Hero section with full-page topographic line animation (waves, pulses — no spinning objects or linear paths)
+- [ ] Liquid physics visual identity carried through all sections (contour lines, wave interactions, particle accents — not repeated identically, but sections feel connected to the hero)
 - [ ] About section with authentic personal content (climbing, lifting, cats, engineering taste)
-- [ ] Projects section linking to dedicated case study pages
+- [ ] Projects section linking to dedicated case study pages with enough context to entice click-through
 - [ ] Experience section (VertikalX, DocReserve, Data Mine) with real technical detail
-- [ ] Contact section with form and links
-- [ ] All copy rewritten in Max's actual voice — no buzzwords, no template language
-- [ ] No component library styling for general layout/cards/text (shadcn only via MCP for specific enhanced components, 21st.dev for select animated components)
-- [ ] Deep research on AI slop patterns and top 50 AI design trends to explicitly avoid
-- [ ] Original animations with depth — no simple spinning, no straight-path movement, no particle systems for decoration
-- [ ] Cohesive theme: every animation/visual element ties back to the topographic concept
+- [ ] Contact section styled in the design language (currently functional but uses old generic copy)
+- [ ] Hero post-solve state — subtitle/tagline appears after puzzle unlock
+- [ ] All remaining section copy rewritten in Max's actual voice
+- [ ] Section transitions that reference the wave/contour aesthetic (TopoSvgDivider ready but disabled)
+- [ ] No component library styling for general layout/cards/text
 - [ ] Mobile responsive
 - [ ] Resume download
 
@@ -84,7 +81,10 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Topographic contour line theme | Provides cohesive visual direction vs random one-off animations | — Pending |
+| Liquid physics + contour line identity | Wave equation driving d3-contour gives organic, interactive visual — far from template territory | Validated in Phase 4 |
+| Interactive puzzle gate on hero | Forces engagement, demonstrates engineering depth, memorable first impression. Skip button for recruiters in a hurry | Validated in Phase 4 |
+| Floating particles on wave surface | Reinforces liquid physics identity — particles bob, scatter from cursor, burst on letter pickup/drop | Validated in Phase 4 |
+| Wave equation over simplex noise | Simplex gives static topographic look; wave equation gives live, interactive liquid feel that responds to user | Validated in Phase 4 |
 | White + black + coral/red-orange palette | Monochrome base with bold accent avoids generic gradient territory | Validated in Phase 2 |
 | Case study pages over project cards | Shows depth of thinking, avoids generic card grid pattern | Validated in Phase 3 |
 | Remove Three.js/3D entirely | Theme is 2D topographic, 3D adds complexity without serving the concept | Validated in Phase 1 |
@@ -109,4 +109,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-07 after Phase 3 (Content & Case Studies) completion — 4 case study pages with real codebase content, anti-slop verified, human-approved*
+*Last updated: 2026-04-08 after Phase 4 hero implementation — puzzle gate, wave physics, floating particles, completion transition, skip button*

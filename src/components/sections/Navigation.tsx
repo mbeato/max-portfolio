@@ -6,6 +6,7 @@ import { Menu, X, Download } from 'lucide-react'
 import { NAVIGATION, SITE_CONFIG } from '@/lib/constants'
 import { cn, generateElementId } from '@/lib/utils'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
+import { usePuzzle } from '@/contexts/PuzzleContext'
 
 interface NavigationProps {
   id: string
@@ -13,8 +14,9 @@ interface NavigationProps {
 
 export default function Navigation({ id }: NavigationProps) {
   const { scrollY } = useScrollProgress()
+  const { puzzleSolved } = usePuzzle()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
+
   const isScrolled = scrollY > 50
 
   const handleNavClick = (href: string) => {
@@ -33,9 +35,10 @@ export default function Navigation({ id }: NavigationProps) {
       id={id}
       className={cn(
         'fixed top-1 left-0 right-0 z-40 transition-all duration-500 ease-out',
-        isScrolled 
+        isScrolled
           ? 'bg-map-white/95 shadow-lg border-b border-stone-200'
-          : 'bg-transparent'
+          : 'bg-transparent',
+        !puzzleSolved && 'opacity-0 -translate-y-full pointer-events-none'
       )}
     >
       <nav 

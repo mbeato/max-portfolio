@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-topographic-animation 04-01-PLAN.md
-last_updated: "2026-04-08T00:51:27.363Z"
+stopped_at: Completed 05-home-page-assembly 05-01-PLAN.md
+last_updated: "2026-04-08T20:38:20.421Z"
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 12
-  completed_plans: 10
+  total_plans: 16
+  completed_plans: 11
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** A portfolio that looks and reads like a real person made it — not an AI template.
-**Current focus:** Phase 04 — topographic-animation
+**Current focus:** Phase 05 — home-page-assembly
 
 ## Current Position
 
-Phase: 04 (topographic-animation) — EXECUTING
-Plan: 2 of 3
+Phase: 05 (home-page-assembly) — EXECUTING
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -55,6 +55,10 @@ Plan: 2 of 3
 | Phase 02-design-system P04 | 12 | 2 tasks | 3 files |
 | Phase 03-content-case-studies P01 | 209 | 2 tasks | 5 files |
 | Phase 04-topographic-animation P01 | 285 | 2 tasks | 5 files |
+| Phase 04-topographic-animation P02 | 480 | 2 tasks | 3 files |
+| Phase 05-home-page-assembly P02 | 153 | 2 tasks | 2 files |
+| Phase 05-home-page-assembly P03 | 3 | 2 tasks | 2 files |
+| Phase 05-home-page-assembly P01 | 221 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -86,6 +90,21 @@ Recent decisions affecting current work:
 - [Phase 03-content-case-studies]: case-studies.ts as single data file — all 4 studies co-located for easy cross-reference
 - [Phase 04-topographic-animation]: GeoJSON MultiPolygon centroid via coordinates[0][0] outer ring average for coral proximity blend
 - [Phase 04-topographic-animation]: useTopoAnimation empty dependency array — all mutable animation state in refs, no React state re-renders
+- [Phase 04-topographic-animation]: DIVIDER_PATHS extracted to @/lib/topo-paths.ts — pure data file avoids client-boundary prerender failure when imported in server page.tsx
+- [Phase 04]: Wave equation replaced simplex noise — interactive liquid physics vs static topographic look
+- [Phase 04]: PuzzleContext manages scroll lock + nav visibility — puzzleSolved boolean + solvePuzzle callback
+- [Phase 04]: completionBurstRef shared between DraggableLetters and useTopoAnimation — signals wave burst on puzzle completion
+- [Phase 04]: Particle system integrated into canvas render loop — drawn before coral source-atop so particles get tinted near cursor
+- [Phase 04]: Letter boundary repulsion uses elliptical normalized distance with per-character shape configs (CHAR_BOUNDARY)
+- [Phase 04]: Adaptive performance monitors 40-frame window avg, adjusts renderSkip 1-3. Physics always full rate.
+- [Phase 04]: Contact.tsx functional but copy is generic ("Let's Work Together", "fellow developer") — needs Phase 5 voice pass
+- [Phase 05-home-page-assembly]: DocReserve/Data Mine dates included with TODO comments pending Max confirmation (COPY-09 accuracy)
+- [Phase 05-home-page-assembly]: Experience slideInLeft + Projects fadeInUp for SECT-02 distinct animation requirement
+- [Phase 05-home-page-assembly]: Contact inputs use getInputShadow helper for shadow-as-border focus/error/idle states instead of Tailwind ring utilities
+- [Phase 05-home-page-assembly]: Resume download available from both Navigation (secondary outlined button) and Contact section left info column
+- [Phase 05-home-page-assembly]: PuzzleContext created as blocking dependency (Rule 3) for Hero subtitle -- mirrors main repo parallel agent work
+- [Phase 05-home-page-assembly]: About section uses two separate useScrollAnimation refs for independent text/photo animation timing (SECT-02)
+- [Phase 05-home-page-assembly]: Photo grid uses next/image fill + object-cover in fixed-height containers for CLS-free rendering
 
 ### Pending Todos
 
@@ -99,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-08T00:51:27.361Z
-Stopped at: Completed 04-topographic-animation 04-01-PLAN.md
+Last session: 2026-04-08T20:38:20.418Z
+Stopped at: Completed 05-home-page-assembly 05-01-PLAN.md
 Resume file: None

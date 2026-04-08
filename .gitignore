@@ -58,3 +58,4 @@ claude.yml
 # project docs to exclude
 CLAUDE.md
 PRD.md
+.env*.local
