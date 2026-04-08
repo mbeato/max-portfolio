@@ -22,6 +22,12 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 - ✓ Space Grotesk + JetBrains Mono typography — Phase 2
 - ✓ Motion vocabulary with reduced-motion support — Phase 2
 - ✓ Anti-slop checklist enforced (no glassmorphism, no Inter, no gradients) — Phase 2
+- ✓ Case study page for Tonos (voice profile API — problem, approach, outcome, tradeoffs) — Phase 3
+- ✓ Case study page for VTX Athlete (athlete scoring platform — problem, approach, outcome, tradeoffs) — Phase 3
+- ✓ Case study page for APIMesh (autonomous API generation — problem, approach, outcome, tradeoffs) — Phase 3
+- ✓ Case study page for awesome-mpp (MPP ecosystem registry — problem, approach, outcome, tradeoffs) — Phase 3
+- ✓ All copy rewritten in Max's actual voice — no buzzwords, no template language — Phase 3
+- ✓ Content accuracy: all project info pulled from actual repos, not fabricated — Phase 3
 
 ### Active
 
@@ -30,10 +36,6 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 - [ ] Hero section with full-page topographic line animation (waves, pulses — no spinning objects or linear paths)
 - [ ] About section with authentic personal content (climbing, lifting, cats, engineering taste)
 - [ ] Projects section linking to dedicated case study pages
-- [ ] Case study page for Tonos (voice profile API — problem, approach, outcome)
-- [ ] Case study page for VTX (athlete scoring platform — problem, approach, outcome)
-- [ ] Case study page for APIMesh/Conway (autonomous API generation — problem, approach, outcome)
-- [ ] Case study page for awesome-mpp (MPP ecosystem registry — problem, approach, outcome)
 - [ ] Experience section (VertikalX, DocReserve, Data Mine) with real technical detail
 - [ ] Contact section with form and links
 - [ ] All copy rewritten in Max's actual voice — no buzzwords, no template language
@@ -84,7 +86,7 @@ A portfolio that looks and reads like a real person made it — not an AI templa
 |----------|-----------|---------|
 | Topographic contour line theme | Provides cohesive visual direction vs random one-off animations | — Pending |
 | White + black + coral/red-orange palette | Monochrome base with bold accent avoids generic gradient territory | Validated in Phase 2 |
-| Case study pages over project cards | Shows depth of thinking, avoids generic card grid pattern | — Pending |
+| Case study pages over project cards | Shows depth of thinking, avoids generic card grid pattern | Validated in Phase 3 |
 | Remove Three.js/3D entirely | Theme is 2D topographic, 3D adds complexity without serving the concept | Validated in Phase 1 |
 | No dark mode | Single cohesive white theme is the design statement | Validated in Phase 1 |
 | No component library default styling | Avoids looking like every other shadcn portfolio | — Pending |
@@ -107,4 +109,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-07 after Phase 2 (Design System) completion — full design token system, typography, motion vocabulary, and anti-slop constraints codified*
+*Last updated: 2026-04-07 after Phase 3 (Content & Case Studies) completion — 4 case study pages with real codebase content, anti-slop verified, human-approved*
