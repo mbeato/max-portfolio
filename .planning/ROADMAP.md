@@ -76,37 +76,50 @@ Plans:
 
 **UI hint**: yes
 
-### Phase 4: Topographic Animation
-**Goal**: The hero canvas animation runs as designed — simplex noise driving d3-contour lines with organic wave/pulse effects, filling the full viewport, performing at 60fps on mobile
+### Phase 4: Hero Animation & Puzzle Gate
+**Goal**: The hero is an interactive liquid physics playground — wave equation driving d3-contour visualization, floating particles on the surface, and a drag-to-place letter puzzle that gates the portfolio. Puzzle completion triggers a dramatic wave burst and unlocks scrolling/navigation.
 **Depends on**: Phase 2
-**Requirements**: TOPO-01, TOPO-02, TOPO-03, TOPO-04, TOPO-05, TOPO-06
+**Requirements**: TOPO-01, TOPO-02, TOPO-03, TOPO-04, TOPO-05, TOPO-06, HERO-01, HERO-02, HERO-03, HERO-04
 **Success Criteria** (what must be TRUE):
-  1. The hero canvas fills the full viewport with contour lines generated from a simplex noise field — no box constraint, no uniform grid
-  2. Contour lines have visibly non-uniform density, varying line weights (0.5px-1.5px), and varying animation phases — they do not look algorithmically generated or repeating
-  3. SVG contour line accents exist at section transitions and draw on with Framer Motion pathLength animation
-  4. All animations degrade gracefully under prefers-reduced-motion (static or minimal fallback)
-  5. Canvas animation achieves >= 90 Lighthouse performance score on mobile — tested on mid-range device profile
-**Plans:** 1/3 plans executed
+  1. Hero canvas fills the full viewport with contour lines driven by a wave equation simulation — cursor movement creates ripples, letter interactions create bursts
+  2. "Maximus Beato" letters scatter on load; dragging each to its stroke-outline target snaps it into place. Identical characters (two "a"s) are interchangeable. Skip button available after 4s.
+  3. Floating particles bob on the wave surface, get repelled by cursor (cubic falloff + speed-scaled), burst from letter pickup/drop, and deflect around letter boundaries
+  4. Puzzle completion fires wave burst from all letters + central radial pulse + particle scatter, coral flash on name, then scroll/nav unlock after 1.3s, "explore" arrow at 1.8s
+  5. Adaptive performance: physics always runs, rendering throttles on slower devices. DPR capped by tier. Particle count scales with device capability.
+  6. SVG section dividers (TopoSvgDivider) built and available — currently disabled in page.tsx, ready for Phase 5 integration
+**Plans:** 2/3 plans executed (04-01, 04-02 done; 04-03 Lighthouse audit deferred to Phase 6)
 
 Plans:
-- [x] 04-01-PLAN.md — Hero canvas animation (simplex-noise + d3-contour + mouse warp + coral shift + mobile/reduced-motion)
-- [ ] 04-02-PLAN.md — SVG section dividers (TopoSvgDivider + pathLength draw-on at 2-3 transitions)
-- [ ] 04-03-PLAN.md — Visual verification checkpoint and Lighthouse performance audit
+- [x] 04-01-PLAN.md — Hero canvas animation (wave equation + d3-contour + mouse interaction + coral shift + mobile/reduced-motion)
+- [x] 04-02-PLAN.md — SVG section dividers (TopoSvgDivider + pathLength draw-on at 2-3 transitions)
+- [ ] 04-03-PLAN.md — Lighthouse performance audit (deferred to Phase 6 — still adding features)
+- [x] Unplanned: Puzzle gate, floating particles, completion transition, skip button (implemented in iterative sessions)
 
 **UI hint**: yes
 
 ### Phase 5: Home Page Assembly
-**Goal**: The complete home page is live — hero, about, projects, experience, contact, and navigation are all assembled, styled, and connected to case study routes, with final copy and resume download
+**Goal**: All sections below the hero are built, styled in the liquid physics design language, and connected — the page reads as one cohesive experience from puzzle gate through contact form. Sections feel connected to the hero's interactive identity without repeating it.
 **Depends on**: Phases 3 and 4
-**Requirements**: COPY-02, COPY-03, COPY-09, HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, HOME-06, HOME-07, SLOP-03, SLOP-04, SLOP-05, SLOP-08, SLOP-09, SLOP-10, SLOP-11, SLOP-12, PERF-04
+**Requirements**: COPY-02, COPY-03, COPY-09, HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, HOME-06, HOME-07, SECT-01, SECT-02, SLOP-03, SLOP-05, SLOP-08, SLOP-09, SLOP-10, SLOP-11, PERF-04
 **Success Criteria** (what must be TRUE):
-  1. Hero text is specific and direct — no "innovative digital experiences", no generic role description, hero CTA links to projects section
+  1. Hero post-solve state shows a subtitle/tagline below "Maximus Beato" that appears after puzzle unlock — specific, in Max's voice, not generic
   2. A recruiter can reach a case study page within 2 scrolls + 1 click from the hero (HOME-07)
-  3. About section contains authentic personal content (climbing, lifting, cats, engineering philosophy) — not a generic bio
+  3. About section contains authentic personal content (climbing, lifting, cats, engineering philosophy) with real photos — not a generic bio
   4. Experience section lists VertikalX, DocReserve, and Data Mine with specific dates and technical detail — no vague role descriptions
-  5. Resume PDF is downloadable from both navigation and the contact section
-  6. Anti-slop gate passes: no bento grid, no typewriter effect, no uniform scroll animations, no skill bars, no tech logo grid, no generic CTAs, no shadcn default styling, no cursor trails
-**Plans**: TBD
+  5. Projects section has cards linking to /work/[slug] with enough context (hook + tech + outcome hint) to entice click-through
+  6. Contact section copy rewritten in Max's voice, form styled in design language
+  7. Section transitions use TopoSvgDivider or other contour-line accents to visually connect sections
+  8. Each section has its own scroll animation treatment — NOT uniform fade-in-on-scroll across all sections
+  9. Resume PDF downloadable from both navigation and contact section
+  10. Anti-slop gate: no bento grid, no uniform scroll animations, no skill bars, no tech logo grid, no generic CTAs, no shadcn default styling
+**Plans:** 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Hero post-solve subtitle + About section (bio, photos, scroll animations)
+- [ ] 05-02-PLAN.md — Experience section (3 work entries) + Projects section (4 case study cards)
+- [ ] 05-03-PLAN.md — Contact copy/style rewrite + Navigation resume button fix
+- [ ] 05-04-PLAN.md — TopoSvgDivider wiring in page.tsx + full page visual checkpoint
+
 **UI hint**: yes
 
 ### Phase 6: Polish & Performance
@@ -131,7 +144,7 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 |-------|----------------|--------|-----------|
 | 1. Foundation Cleanup | 3/3 | Complete   | 2026-04-07 |
 | 2. Design System | 4/4 | Complete   | 2026-04-07 |
-| 3. Content & Case Studies | 1/2 | In Progress|  |
-| 4. Topographic Animation | 1/3 | In Progress|  |
-| 5. Home Page Assembly | 0/TBD | Not started | - |
+| 3. Content & Case Studies | 2/2 | Complete   | 2026-04-07 |
+| 4. Hero Animation & Puzzle Gate | 2/3 + unplanned | Complete (04-03 audit deferred to P6) | 2026-04-08 |
+| 5. Home Page Assembly | 0/4 | Planned | - |
 | 6. Polish & Performance | 0/TBD | Not started | - |
