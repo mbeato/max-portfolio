@@ -86,7 +86,13 @@ Plans:
   3. SVG contour line accents exist at section transitions and draw on with Framer Motion pathLength animation
   4. All animations degrade gracefully under prefers-reduced-motion (static or minimal fallback)
   5. Canvas animation achieves >= 90 Lighthouse performance score on mobile — tested on mid-range device profile
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Hero canvas animation (simplex-noise + d3-contour + mouse warp + coral shift + mobile/reduced-motion)
+- [ ] 04-02-PLAN.md — SVG section dividers (TopoSvgDivider + pathLength draw-on at 2-3 transitions)
+- [ ] 04-03-PLAN.md — Visual verification checkpoint and Lighthouse performance audit
+
 **UI hint**: yes
 
 ### Phase 5: Home Page Assembly
@@ -126,6 +132,6 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 | 1. Foundation Cleanup | 3/3 | Complete   | 2026-04-07 |
 | 2. Design System | 4/4 | Complete   | 2026-04-07 |
 | 3. Content & Case Studies | 1/2 | In Progress|  |
-| 4. Topographic Animation | 0/TBD | Not started | - |
+| 4. Topographic Animation | 0/3 | Not started | - |
 | 5. Home Page Assembly | 0/TBD | Not started | - |
 | 6. Polish & Performance | 0/TBD | Not started | - |
