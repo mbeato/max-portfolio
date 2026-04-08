@@ -26,12 +26,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Topographic Animation
 
-- [ ] **TOPO-01**: Hero canvas animation — simplex noise + d3-contour generating contour lines with wave/pulse effects
-- [ ] **TOPO-02**: Contour lines have varying density, non-uniform spacing, and non-uniform animation phases (not generated-looking)
-- [ ] **TOPO-03**: Animation fills full hero viewport, not constrained to a box
+- [x] **TOPO-01**: Hero canvas animation — simplex noise + d3-contour generating contour lines with wave/pulse effects
+- [x] **TOPO-02**: Contour lines have varying density, non-uniform spacing, and non-uniform animation phases (not generated-looking)
+- [x] **TOPO-03**: Animation fills full hero viewport, not constrained to a box
 - [ ] **TOPO-04**: SVG contour line accents for section transitions using Framer Motion pathLength
-- [ ] **TOPO-05**: All animations respect prefers-reduced-motion
-- [ ] **TOPO-06**: Canvas animation performs at 60fps on mid-range mobile (Lighthouse performance score >= 90)
+- [x] **TOPO-05**: All animations respect prefers-reduced-motion
+- [x] **TOPO-06**: Canvas animation performs at 60fps on mid-range mobile (Lighthouse performance score >= 90)
 
 ### Content & Copy
 
@@ -131,12 +131,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | DSGN-03 | Phase 2 | Complete |
 | DSGN-04 | Phase 2 | Complete |
 | DSGN-05 | Phase 2 | Complete |
-| TOPO-01 | Phase 4 | Pending |
-| TOPO-02 | Phase 4 | Pending |
-| TOPO-03 | Phase 4 | Pending |
+| TOPO-01 | Phase 4 | Complete |
+| TOPO-02 | Phase 4 | Complete |
+| TOPO-03 | Phase 4 | Complete |
 | TOPO-04 | Phase 4 | Pending |
-| TOPO-05 | Phase 4 | Pending |
-| TOPO-06 | Phase 4 | Pending |
+| TOPO-05 | Phase 4 | Complete |
+| TOPO-06 | Phase 4 | Complete |
 | COPY-01 | Phase 3 | Complete |
 | COPY-02 | Phase 5 | Pending |
 | COPY-03 | Phase 5 | Pending |
