@@ -79,7 +79,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: 'vtx',
-    title: 'vtx',
+    title: 'vtx athlete',
     hook: 'an athlete scoring engine that ranks training, social presence, and competition results into a single 0-1000 score for brand sponsorship matching',
     year: '2025',
     status: 'live',
