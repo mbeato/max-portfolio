@@ -72,7 +72,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Route infrastructure, UI components, and all 4 case study data objects with real codebase content
-- [ ] 03-02-PLAN.md — Anti-slop gate verification and visual/content checkpoint
+- [x] 03-02-PLAN.md — Anti-slop gate verification and visual/content checkpoint
 
 **UI hint**: yes
 
