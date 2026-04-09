@@ -190,6 +190,9 @@ export function useTopoAnimation(
 
     let rafId = 0
     let frameCount = 0
+    let paused = false        // true when tab hidden or hero off-screen
+    let tabHidden = false
+    let offScreen = false
     const prevDragging = new Uint8Array(20)
 
     // Adaptive performance — physics always runs, rendering throttles if behind
@@ -863,6 +866,8 @@ export function useTopoAnimation(
     }
 
     function tick(): void {
+      if (paused) return // safety — rAF shouldn't fire when paused, but guard anyway
+
       const now = performance.now()
       adaptPerformance(now)
       frameCount++
@@ -1105,6 +1110,31 @@ export function useTopoAnimation(
       rafId = requestAnimationFrame(tick)
     }
 
+    function resume(): void {
+      if (!paused) return
+      paused = false
+      lastTickTime = performance.now() // reset so adaptPerformance ignores the gap
+      frameTimeBuf.length = 0
+      rafId = requestAnimationFrame(tick)
+    }
+
+    function pause(): void {
+      if (paused) return
+      paused = true
+      cancelAnimationFrame(rafId)
+      rafId = 0
+    }
+
+    function updatePauseState(): void {
+      if (tabHidden || offScreen) pause()
+      else resume()
+    }
+
+    function handleVisibilityChange(): void {
+      tabHidden = document.hidden
+      updatePauseState()
+    }
+
     function handleMouseMove(e: MouseEvent): void {
       const rect = canvas!.getBoundingClientRect()
       rawMouseX = e.clientX - rect.left
@@ -1138,6 +1168,20 @@ export function useTopoAnimation(
     })
     resizeObserver.observe(document.documentElement)
 
+    // Pause animation when hero section scrolls out of view
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        offScreen = !entry.isIntersecting
+        updatePauseState()
+      },
+      { threshold: 0 } // any pixel visible = keep running
+    )
+    const canvasParent = canvas!.parentElement
+    if (canvasParent) intersectionObserver.observe(canvasParent)
+
+    // Pause animation when tab is hidden
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     if (!isMobile) {
       window.addEventListener('mousemove', handleMouseMove)
     }
@@ -1145,6 +1189,8 @@ export function useTopoAnimation(
     return () => {
       cancelAnimationFrame(rafId)
       resizeObserver.disconnect()
+      intersectionObserver.disconnect()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       if (!isMobile) {
         window.removeEventListener('mousemove', handleMouseMove)
       }
