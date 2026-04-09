@@ -57,5 +57,15 @@ claude.yml
 
 # project docs to exclude
 CLAUDE.md
+DESIGN.md
 PRD.md
 .env*.local
+
+# gsd planning artifacts
+.planning/
+
+# lighthouse reports (contain local machine info)
+lighthouse-*.json
+
+# screenshots
+Screenshot*
