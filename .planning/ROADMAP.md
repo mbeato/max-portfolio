@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Content & Case Studies** - Extract real content from codebases, build case study pages
 - [ ] **Phase 4: Topographic Animation** - Build the hero canvas animation and SVG section accents
 - [x] **Phase 5: Home Page Assembly** - Wire all home sections together with final copy and navigation (completed 2026-04-08)
-- [ ] **Phase 6: Polish & Performance** - Validate performance, mobile, and anti-slop compliance
+- [x] **Phase 6: Polish & Performance** - Validate performance, mobile, and anti-slop compliance (completed 2026-04-09)
 
 ## Phase Details
 
@@ -132,11 +132,11 @@ Plans:
   3. Lighthouse performance score >= 90 on both home page and at least one case study page
   4. Zero instances of any copy pattern from the anti-slop list — all 15 checklist items from DESIGN.md section 9 pass
   5. Each case study is scannable in 90 seconds — hook visible above the fold, approach and outcome reachable without searching
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 06-01-PLAN.md — Anti-slop copy fix (metadata rewrite), image sizes optimization, About photo grid mobile fix
-- [ ] 06-02-PLAN.md — Lighthouse performance audit + mobile responsive checkpoint + case study scannability + visual anti-slop review
+- [x] 06-02-PLAN.md — Lighthouse performance audit + mobile responsive checkpoint + case study scannability + visual anti-slop review
 
 ## Progress
 
@@ -151,4 +151,4 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 | 3. Content & Case Studies | 2/2 | Complete   | 2026-04-07 |
 | 4. Hero Animation & Puzzle Gate | 2/3 + unplanned | Complete (04-03 audit deferred to P6) | 2026-04-08 |
 | 5. Home Page Assembly | 4/4 | Complete | 2026-04-08 |
-| 6. Polish & Performance | 1/2 | In Progress|  |
+| 6. Polish & Performance | 2/2 | Complete   | 2026-04-09 |

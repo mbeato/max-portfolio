@@ -90,7 +90,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Responsive & Performance
 
-- [ ] **PERF-01**: Mobile responsive — all sections usable on phone
+- [x] **PERF-01**: Mobile responsive — all sections usable on phone
 - [x] **PERF-02**: LCP < 2.5s on mobile
 - [x] **PERF-03**: Lighthouse performance score >= 90
 - [x] **PERF-04**: Resume download as PDF from nav or contact section
@@ -186,7 +186,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | SLOP-10 | Phase 5 | Complete |
 | SLOP-11 | Phase 5 | Complete |
 | SLOP-12 | Phase 4 | Complete |
-| PERF-01 | Phase 6 | Pending |
+| PERF-01 | Phase 6 | Complete |
 | PERF-02 | Phase 6 | Complete |
 | PERF-03 | Phase 6 | Complete |
 | PERF-04 | Phase 5 | Complete |
