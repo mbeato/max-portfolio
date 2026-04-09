@@ -48,7 +48,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **COPY-07**: Case study content for awesome-mpp pulled from actual /Users/vtx/awesome-mpp repo
 - [x] **COPY-08**: Each case study follows problem/approach/outcome structure with real technical specifics and at least one tradeoff or rejected alternative
 - [x] **COPY-09**: Experience descriptions for VertikalX, DocReserve, Data Mine with specific technical detail
-- [ ] **COPY-10**: Zero instances of any copy pattern from the top 50 AI slop list
+- [x] **COPY-10**: Zero instances of any copy pattern from the top 50 AI slop list
 
 ### Case Study Pages
 
@@ -91,8 +91,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Responsive & Performance
 
 - [ ] **PERF-01**: Mobile responsive — all sections usable on phone
-- [ ] **PERF-02**: LCP < 2.5s on mobile
-- [ ] **PERF-03**: Lighthouse performance score >= 90
+- [x] **PERF-02**: LCP < 2.5s on mobile
+- [x] **PERF-03**: Lighthouse performance score >= 90
 - [x] **PERF-04**: Resume download as PDF from nav or contact section
 
 ## v2 Requirements
@@ -159,7 +159,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | COPY-07 | Phase 3 | Complete |
 | COPY-08 | Phase 3 | Complete |
 | COPY-09 | Phase 5 | Complete |
-| COPY-10 | Phase 6 | Pending |
+| COPY-10 | Phase 6 | Complete |
 | CASE-01 | Phase 3 | Complete |
 | CASE-02 | Phase 3 | Complete |
 | CASE-03 | Phase 6 | Complete |
@@ -187,8 +187,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | SLOP-11 | Phase 5 | Complete |
 | SLOP-12 | Phase 4 | Complete |
 | PERF-01 | Phase 6 | Pending |
-| PERF-02 | Phase 6 | Pending |
-| PERF-03 | Phase 6 | Pending |
+| PERF-02 | Phase 6 | Complete |
+| PERF-03 | Phase 6 | Complete |
 | PERF-04 | Phase 5 | Complete |
 
 **Coverage:**

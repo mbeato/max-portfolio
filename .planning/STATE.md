@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 5 complete
-stopped_at: Phase 6 context gathered
-last_updated: "2026-04-09T00:19:46.319Z"
+status: Ready to execute
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-04-09T00:47:37.168Z"
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 16
-  completed_plans: 14
+  total_plans: 18
+  completed_plans: 15
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 
 ## Current Position
 
-Phase: 06 (polish-performance) — NOT STARTED
-Plan: 0 of TBD
+Phase: 06 (polish-performance) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Plan: 0 of TBD
 | Phase 05-home-page-assembly P02 | 153 | 2 tasks | 2 files |
 | Phase 05-home-page-assembly P03 | 3 | 2 tasks | 2 files |
 | Phase 05-home-page-assembly P01 | 221 | 2 tasks | 4 files |
+| Phase 06-polish-performance P01 | 96 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,8 @@ Recent decisions affecting current work:
 - [Phase 05-home-page-assembly]: PuzzleContext created as blocking dependency (Rule 3) for Hero subtitle -- mirrors main repo parallel agent work
 - [Phase 05-home-page-assembly]: About section uses two separate useScrollAnimation refs for independent text/photo animation timing (SECT-02)
 - [Phase 05-home-page-assembly]: Photo grid uses next/image fill + object-cover in fixed-height containers for CLS-free rendering
+- [Phase 06-polish-performance]: Gradient mask-image usage in DraggableLetters/TopoCanvas approved — all are CSS mask techniques, no decorative backgrounds remain
+- [Phase 06-polish-performance]: Hero dot-grid radial-gradient backdrop removed — was invisible under canvas, removal eliminates grep audit ambiguity
 
 ### Pending Todos
 
@@ -118,6 +121,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-09T00:19:46.316Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-polish-performance/06-CONTEXT.md
+Last session: 2026-04-09T00:47:37.166Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None
