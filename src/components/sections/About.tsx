@@ -115,23 +115,25 @@ export default function About({ id }: AboutProps) {
           >
             <div className="grid grid-cols-2 gap-3">
               {/* Me.jpg — spans both rows of left column */}
-              <motion.div variants={fadeIn} className="row-span-2 relative" style={{ minHeight: '400px' }}>
+              <motion.div variants={fadeIn} className="row-span-2 relative" style={{ minHeight: 'clamp(250px, 55vw, 400px)' }}>
                 <Image
                   src="/images/Me.jpg"
                   alt="max beato portrait"
                   fill
                   priority
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 18vw, 200px"
                   className="object-cover"
                   style={{ objectPosition: 'center 15%', borderRadius: 'var(--radius-comfortable)' }}
                 />
               </motion.div>
 
               {/* Top right — climbing */}
-              <motion.div variants={fadeIn} className="relative" style={{ minHeight: '195px' }}>
+              <motion.div variants={fadeIn} className="relative" style={{ minHeight: 'clamp(120px, 27vw, 195px)' }}>
                 <Image
                   src="/images/Climbing.jpg"
                   alt="rock climbing in a gym"
                   fill
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 18vw, 200px"
                   className="object-cover"
                   style={{ borderRadius: 'var(--radius-comfortable)' }}
                 />
@@ -139,20 +141,22 @@ export default function About({ id }: AboutProps) {
 
               {/* Bottom right — lifting + cats stacked */}
               <div className="grid grid-rows-2 gap-3">
-                <motion.div variants={fadeIn} className="relative" style={{ minHeight: '93px' }}>
+                <motion.div variants={fadeIn} className="relative" style={{ minHeight: 'clamp(56px, 12vw, 93px)' }}>
                   <Image
                     src="/images/Lifting.jpg"
                     alt="powerlifting training"
                     fill
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 18vw, 100px"
                     className="object-cover"
                     style={{ borderRadius: 'var(--radius-comfortable)' }}
                   />
                 </motion.div>
-                <motion.div variants={fadeIn} className="relative" style={{ minHeight: '93px' }}>
+                <motion.div variants={fadeIn} className="relative" style={{ minHeight: 'clamp(56px, 12vw, 93px)' }}>
                   <Image
                     src="/images/Cats.jpg"
                     alt="cats at home"
                     fill
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 18vw, 100px"
                     className="object-cover"
                     style={{ borderRadius: 'var(--radius-comfortable)' }}
                   />
