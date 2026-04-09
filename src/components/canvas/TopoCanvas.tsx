@@ -2,20 +2,23 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { useTopoAnimation } from '@/hooks/useTopoAnimation'
-import type { LetterBody } from '@/hooks/useTopoAnimation'
+import type { LetterBody, DragFeedback } from '@/hooks/useTopoAnimation'
 import DraggableLetters from '@/components/canvas/DraggableLetters'
+
+const INITIAL_FEEDBACK: DragFeedback = { active: false, targetX: 0, targetY: 0, letterX: 0, letterY: 0, proximity: 0 }
 
 export default function TopoCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const lettersRef = useRef<LetterBody[]>([])
   const completionBurstRef = useRef(false)
+  const dragFeedbackRef = useRef<DragFeedback>(INITIAL_FEEDBACK)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768)
   }, [])
 
-  useTopoAnimation(canvasRef, { isMobile }, lettersRef, completionBurstRef)
+  useTopoAnimation(canvasRef, { isMobile }, lettersRef, completionBurstRef, dragFeedbackRef)
 
   return (
     <>
@@ -43,7 +46,7 @@ export default function TopoCanvas() {
       {/* Draggable name — fills section so coords match canvas physics */}
       <div className="absolute inset-0 z-10">
         <div className="flex items-center justify-center h-full max-w-4xl mx-auto px-4">
-          <DraggableLetters lettersRef={lettersRef} canvasRef={canvasRef} completionBurstRef={completionBurstRef} />
+          <DraggableLetters lettersRef={lettersRef} canvasRef={canvasRef} completionBurstRef={completionBurstRef} dragFeedbackRef={dragFeedbackRef} />
         </div>
       </div>
     </>

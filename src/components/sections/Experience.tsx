@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { slideInLeft, staggerContainer } from '@/lib/motion'
 import { useScrollAnimation } from '@/hooks/useIntersectionObserver'
 import { generateElementId } from '@/lib/utils'
@@ -11,38 +12,41 @@ interface ExperienceEntry {
   role: string
   company: string
   dates: string
+  progression?: string
   description: string
   tags: string[]
+  logo?: string
 }
 
-// TODO: DocReserve and Data Mine dates/descriptions pending Max's confirmation (COPY-09 content accuracy)
 const EXPERIENCES: ExperienceEntry[] = [
   {
     id: 'vertikalx',
-    role: 'founder & full-stack engineer',
+    role: 'cto',
     company: 'vertikalx',
-    dates: '2024 – present',
+    dates: 'may 2025 – present',
+    progression: 'intern → senior swe → cto',
+    logo: '/logos/vtx-icon.svg',
     description:
-      'built vtx athlete from scratch — composite scoring engine aggregating strava, instagram, and competition data into a 0–1000 sponsor-matching score. nestjs + graphql api, expo mobile app (ios + android), redis cache, bull queues for background processing.',
-    tags: ['NestJS', 'GraphQL', 'PostgreSQL', 'Redis', 'Expo', 'Strava API'],
+      'joined as cto and inherited the existing infrastructure, then majorly refactored the entire stack. nestjs + graphql backend on kubernetes (kops on ec2), react native mobile app with expo, serving 60+ athletes. led 3 engineers, rebuilt ci/cd from manual deploys to a 5-stage gitlab pipeline cutting deploy time from 3hrs to 15min, and reduced aws costs by 45%.',
+    tags: ['NestJS', 'GraphQL', 'PostgreSQL', 'Redis', 'Expo', 'Kubernetes', 'AWS', 'GitLab CI/CD'],
   },
   {
     id: 'docreserve',
-    role: 'software engineer intern',
+    role: 'founding engineer',
     company: 'docreserve',
-    dates: '2023', // TODO: confirm exact dates with Max
+    dates: 'jan 2024 – oct 2024',
     description:
-      'built internal scheduling and document management features for a healthcare platform. worked across the full stack — react frontend, node.js api, postgresql database. shipped appointment booking flow used by clinic staff daily.',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'REST API'],
+      'first engineer at an early-stage healthcare reservation startup, built everything end to end before it shut down. react/typescript/mui frontend, prisma data models, docker environments, and the full deployment pipeline. focused mainly on calendar-based reservation ux.',
+    tags: ['React', 'TypeScript', 'MUI', 'Prisma', 'Docker', 'PostgreSQL'],
   },
   {
     id: 'datamine',
-    role: 'data analyst',
-    company: 'data mine — purdue',
-    dates: '2022 – 2023', // TODO: confirm exact dates with Max
+    role: 'data science researcher',
+    company: 'the data mine, purdue',
+    dates: 'undergrad',
     description:
-      "analyzed large datasets for corporate partners as part of purdue's data mine learning community. built data pipelines, created visualizations, and presented findings to stakeholders. learned to translate messy real-world data into actionable insights.",
-    tags: ['Python', 'R', 'SQL', 'Tableau', 'Data Pipelines'],
+      "worked on data analysis projects through purdue's corporate data science partnership program. collaborated with industry partners on real datasets and research problems.",
+    tags: ['Python', 'SQL', 'Data Analysis'],
   },
 ]
 
@@ -65,21 +69,32 @@ function ExperienceCard({ entry }: { entry: ExperienceEntry }) {
         transition: 'border-left-color var(--duration-slow) var(--ease-contour)',
       }}
     >
-      <h3
-        style={{
-          fontSize: 'var(--text-h3)',
-          lineHeight: 'var(--text-h3--line-height)',
-          letterSpacing: 'var(--text-h3--letter-spacing)',
-          fontWeight: 500,
-          color: 'var(--color-stone-900)',
-        }}
-      >
-        {entry.role}
-        <span style={{ color: 'var(--color-stone-500)', fontWeight: 400 }}>
-          {' '}
-          · {entry.company}
-        </span>
-      </h3>
+      <div className="flex items-center gap-3">
+        {entry.logo && (
+          <Image
+            src={entry.logo}
+            alt={`${entry.company} logo`}
+            width={28}
+            height={28}
+            className="opacity-70"
+          />
+        )}
+        <h3
+          style={{
+            fontSize: 'var(--text-h3)',
+            lineHeight: 'var(--text-h3--line-height)',
+            letterSpacing: 'var(--text-h3--letter-spacing)',
+            fontWeight: 500,
+            color: 'var(--color-stone-900)',
+          }}
+        >
+          {entry.role}
+          <span style={{ color: 'var(--color-stone-500)', fontWeight: 400 }}>
+            {' '}
+            · {entry.company}
+          </span>
+        </h3>
+      </div>
 
       <p
         style={{
@@ -87,11 +102,25 @@ function ExperienceCard({ entry }: { entry: ExperienceEntry }) {
           lineHeight: 'var(--text-body-sm--line-height)',
           color: 'var(--color-stone-500)',
           marginTop: 'var(--spacing-1)',
-          marginBottom: 'var(--spacing-4)',
+          marginBottom: entry.progression ? 'var(--spacing-1)' : 'var(--spacing-4)',
         }}
       >
         {entry.dates}
       </p>
+      {entry.progression && (
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--text-label)',
+            lineHeight: 'var(--text-label--line-height)',
+            letterSpacing: 'var(--text-label--letter-spacing)',
+            color: 'var(--color-stone-400)',
+            marginBottom: 'var(--spacing-4)',
+          }}
+        >
+          {entry.progression}
+        </p>
+      )}
 
       <p
         style={{

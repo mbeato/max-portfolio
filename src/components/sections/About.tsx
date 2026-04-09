@@ -21,7 +21,7 @@ export default function About({ id }: AboutProps) {
     >
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-          {/* Text column — 60% */}
+          {/* Text column,60% */}
           <motion.div
             ref={textRef as React.RefObject<HTMLDivElement>}
             className="lg:w-[60%]"
@@ -66,7 +66,7 @@ export default function About({ id }: AboutProps) {
                 marginBottom: 'var(--spacing-6)',
               }}
             >
-              i&apos;m a purdue university student who builds because it&apos;s fun. i like making things that run fast, look sharp, and actually make someone&apos;s day better. whether it&apos;s a new framework, a weird api, or some half-baked side project, i&apos;m always curious to see how it works and what i can make with it.
+              cs senior at purdue, wrapping up may 2026. i focus on software engineering and machine intelligence, but i have the most fun building full-stack apps that solve real problems.
             </motion.p>
 
             <motion.p
@@ -78,7 +78,7 @@ export default function About({ id }: AboutProps) {
                 marginBottom: 'var(--spacing-6)',
               }}
             >
-              climbing taught me to break big problems into small moves. route reading feels a lot like debugging: stay calm, test the next hold, and commit when it matters. that mindset carries into my work — iterate, get signal quickly, and keep momentum.
+              i&apos;m cto at vertikalx right now where i basically built the whole stack from scratch. nestjs backend with graphql, kubernetes handling orchestration, react native on mobile. went from nothing to production infrastructure in just a few months which was pretty cool to figure out.
             </motion.p>
 
             <motion.p
@@ -90,7 +90,7 @@ export default function About({ id }: AboutProps) {
                 marginBottom: 'var(--spacing-6)',
               }}
             >
-              powerlifting keeps me disciplined. progressive overload is just versioning for strength — small, consistent gains over time. i bring the same approach to shipping features: tight feedback loops, good tooling, and steady improvement.
+              side projects are where i get more experimental. tonos is a personal voice ai platform i built because i wanted to be able to automate outreach without sounding robotic. apimesh is an attempt at filling a potential gap in new tech that seems like its changing every day. both are in the projects section if you want to dig into the technical stuff.
             </motion.p>
 
             <motion.p
@@ -101,11 +101,11 @@ export default function About({ id }: AboutProps) {
                 color: 'var(--color-stone-700)',
               }}
             >
-              i like working with people who get excited about the little details — clean animations, smart abstractions, the &apos;it just works&apos; moments. if you&apos;re into building things that feel great to use and stretching a stack in new ways, we&apos;ll get along.
+              outside of work and school i climb and powerlift basically every day when i&apos;m not hanging out with my two lovely cats.
             </motion.p>
           </motion.div>
 
-          {/* Photo column — 40% */}
+          {/* Photo column,40% */}
           <motion.div
             ref={photoRef as React.RefObject<HTMLDivElement>}
             className="lg:w-[40%]"
@@ -114,7 +114,7 @@ export default function About({ id }: AboutProps) {
             animate={photosVisible ? "animate" : "initial"}
           >
             <div className="grid grid-cols-2 gap-3">
-              {/* Me.jpg — spans both rows of left column */}
+              {/* Me.jpg,spans both rows of left column */}
               <motion.div variants={fadeIn} className="row-span-2 relative" style={{ minHeight: 'clamp(250px, 55vw, 400px)' }}>
                 <Image
                   src="/images/Me.jpg"
@@ -127,7 +127,7 @@ export default function About({ id }: AboutProps) {
                 />
               </motion.div>
 
-              {/* Top right — climbing */}
+              {/* Top right,climbing */}
               <motion.div variants={fadeIn} className="relative" style={{ minHeight: 'clamp(120px, 27vw, 195px)' }}>
                 <Image
                   src="/images/Climbing.jpg"
@@ -139,7 +139,7 @@ export default function About({ id }: AboutProps) {
                 />
               </motion.div>
 
-              {/* Bottom right — lifting + cats stacked */}
+              {/* Bottom right,lifting + cats stacked */}
               <div className="grid grid-rows-2 gap-3">
                 <motion.div variants={fadeIn} className="relative" style={{ minHeight: 'clamp(56px, 12vw, 93px)' }}>
                   <Image

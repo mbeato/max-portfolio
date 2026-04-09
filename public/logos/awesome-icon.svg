@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#FC60A8"/>
+  <g transform="translate(4, 10)" fill="white">
+    <!-- Sunglasses bridge -->
+    <rect x="10" y="2" width="4" height="2" rx="1"/>
+    <!-- Left lens -->
+    <rect x="1" y="0" width="10" height="8" rx="3"/>
+    <!-- Right lens -->
+    <rect x="13" y="0" width="10" height="8" rx="3"/>
+    <!-- Left arm -->
+    <rect x="0" y="0" width="2" height="3" rx="1"/>
+    <!-- Right arm -->
+    <rect x="22" y="0" width="2" height="3" rx="1"/>
+  </g>
+</svg>

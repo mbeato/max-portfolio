@@ -1,6 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { CASE_STUDIES } from '@/lib/case-studies'
 import type { CaseStudy } from '@/lib/case-studies'
 import { fadeInUp, staggerContainer } from '@/lib/motion'
@@ -12,6 +14,8 @@ interface ProjectsProps {
 }
 
 function ProjectCard({ study }: { study: CaseStudy }) {
+  const [hovered, setHovered] = useState(false)
+
   return (
     <motion.a
       href={`/work/${study.slug}`}
@@ -19,39 +23,42 @@ function ProjectCard({ study }: { study: CaseStudy }) {
       id={generateElementId('projects', 'card', study.slug)}
       className="block bg-white"
       style={{
-        boxShadow: 'var(--shadow-border)',
+        boxShadow: hovered ? 'var(--shadow-hover)' : 'var(--shadow-border)',
         borderRadius: 'var(--radius-comfortable)',
         padding: 'var(--spacing-8)',
-        borderLeft: '2px solid transparent',
+        borderLeft: `2px solid ${hovered ? 'var(--color-coral-peak)' : 'transparent'}`,
         transition: `box-shadow var(--duration-slow) var(--ease-contour), border-left-color var(--duration-slow) var(--ease-contour)`,
       }}
-      whileHover={{
-        boxShadow: 'var(--shadow-hover)',
-      }}
-      onHoverStart={(e) => {
-        (e.currentTarget as HTMLElement).style.borderLeftColor =
-          'var(--color-coral-peak)'
-      }}
-      onHoverEnd={(e) => {
-        (e.currentTarget as HTMLElement).style.borderLeftColor = 'transparent'
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Top row: title + year/status */}
       <div
         className="flex items-start justify-between"
         style={{ marginBottom: 'var(--spacing-2)' }}
       >
-        <h3
-          style={{
-            fontSize: 'var(--text-h2)',
-            lineHeight: 'var(--text-h2--line-height)',
-            letterSpacing: 'var(--text-h2--letter-spacing)',
-            fontWeight: 600,
-            color: 'var(--color-stone-900)',
-          }}
-        >
-          {study.title}
-        </h3>
+        <div className="flex items-center gap-3">
+          {study.logo && (
+            <Image
+              src={study.logo}
+              alt={`${study.title} logo`}
+              width={24}
+              height={24}
+              className="opacity-70"
+            />
+          )}
+          <h3
+            style={{
+              fontSize: 'var(--text-h2)',
+              lineHeight: 'var(--text-h2--line-height)',
+              letterSpacing: 'var(--text-h2--letter-spacing)',
+              fontWeight: 600,
+              color: 'var(--color-stone-900)',
+            }}
+          >
+            {study.title}
+          </h3>
+        </div>
         <span
           style={{
             fontSize: 'var(--text-body-sm)',

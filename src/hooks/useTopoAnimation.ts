@@ -7,10 +7,10 @@ import { usePerformance } from '@/components/ui/PerformanceProvider'
 
 // Tier configs — wave simulation grid sizes
 const TIER = {
-  high:   { cols: 200, rows: 120, thresholds: 5, particles: 45 },
-  medium: { cols: 150, rows: 90,  thresholds: 4, particles: 30 },
-  low:    { cols: 100, rows: 60,  thresholds: 3, particles: 18 },
-  mobile: { cols: 80,  rows: 50,  thresholds: 3, particles: 12 },
+  high:   { cols: 200, rows: 120, thresholds: 5, particles: 140 },
+  medium: { cols: 150, rows: 90,  thresholds: 4, particles: 100 },
+  low:    { cols: 100, rows: 60,  thresholds: 3, particles: 55 },
+  mobile: { cols: 80,  rows: 50,  thresholds: 3, particles: 35 },
 } as const
 
 const CORAL_COLOR = { r: 232, g: 82, b: 63 }
@@ -22,7 +22,7 @@ const WAVE_SPEED = 0.18          // moderate propagation
 const WAVE_DAMPING = 0.945       // ~0.5s fade — brief flash then gone
 const MOUSE_DROP_RADIUS = 5      // broad radius for smooth rounded ripples
 const MOUSE_DROP_STRENGTH = 0.018 // light touch — capped per cell, decays fast
-const LETTER_PICKUP_STRENGTH = 0.015
+const LETTER_PICKUP_STRENGTH = 0.025
 const LETTER_DROP_STRENGTH = 0.025
 const AMBIENT_STRENGTH = 0.001   // subtle ambient perturbation (halved from original)
 const AMBIENT_INTERVAL = 20      // less frequent ambient drops
@@ -64,7 +64,18 @@ export interface LetterBody {
   prevX: number
   prevY: number
   dragging: boolean
+  snapped: boolean
   char: string
+}
+
+// Hot/cold drag feedback — DraggableLetters writes, animation hook reads
+export interface DragFeedback {
+  active: boolean
+  targetX: number  // canvas-relative px of best matching target
+  targetY: number
+  letterX: number  // current dragged letter position
+  letterY: number
+  proximity: number // 0→far, 1→at target
 }
 
 interface Particle {
@@ -99,7 +110,8 @@ export function useTopoAnimation(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   options: { isMobile: boolean },
   lettersRef: React.RefObject<LetterBody[]>,
-  completionBurstRef: React.RefObject<boolean>
+  completionBurstRef: React.RefObject<boolean>,
+  dragFeedbackRef: React.RefObject<DragFeedback>
 ): void {
   const { prefersReducedMotion, isLowEndDevice } = usePerformance()
 
@@ -148,6 +160,21 @@ export function useTopoAnimation(
     let dpr = 1
     // DPR caps by tier — lower-end devices save fill rate
     const maxDpr = tier === 'mobile' || tier === 'low' ? 1 : tier === 'medium' ? 1.5 : 2
+
+    // Manual letter ripples — expanding rings rendered directly on canvas,
+    // independent of wave equation speed. Each ripple has its own center, radius, and lifetime.
+    interface LetterRipple { cx: number; cy: number; age: number; maxAge: number; maxRadius: number }
+    const letterRipples: LetterRipple[] = []
+    const LETTER_RIPPLE_INTERVAL = 180  // frames between new ripple cycles
+    const LETTER_RIPPLE_MAX_AGE = 220   // frames to fully expand and fade (~3.7s at 60fps)
+    const LETTER_RIPPLE_MAX_RADIUS = 42 // px — how far the ring expands
+
+    // Completion shockwave — full-screen expanding rings on puzzle solve
+    const SHOCKWAVE_MAX_AGE = 180       // ~3s at 60fps
+    const SHOCKWAVE_MAX_RADIUS_MULT = 0.8 // fraction of canvas diagonal
+    const SHOCKWAVE_RINGS = 5
+    const SHOCKWAVE_RING_GAP = 25       // px between rings
+    const completionShockwave = { active: false, age: 0 }
 
     // Mouse state
     let rawMouseX = -9999
@@ -230,6 +257,7 @@ export function useTopoAnimation(
       for (let li = 0; li < letters.length; li++) {
         const letter = letters[li]
         if (letter.char === ' ' || letter.char === '\u00A0') continue
+        if (!letter.snapped) continue  // unsnapped letters don't absorb waves
 
         const halfLeading = (letter.height - letter.fontSize) * 0.5
         let inkTop = letter.y + halfLeading
@@ -473,7 +501,7 @@ export function useTopoAnimation(
           p.vy += (mouseDy / mouseDist) * force
         }
 
-        // Letter boundary repulsion — particles deflect around letter edges
+        // Letter-particle interaction: snapped letters repel, unsnapped attract
         const pLetters = lettersRef.current
         if (pLetters) {
           for (let li = 0; li < pLetters.length; li++) {
@@ -501,13 +529,54 @@ export function useTopoAnimation(
             const lny = (p.y - lcy) / lhh
             const lnd = lnx * lnx + lny * lny
 
-            if (lnd < 1 && lnd > 0.01) {
-              const sqrtNd = Math.sqrt(lnd)
-              const penetration = 1 - sqrtNd    // 0 at edge → 1 at center
-              const force = penetration * penetration * PARTICLE_LETTER_REPEL
-              p.vx += (lnx / sqrtNd) * force
-              p.vy += (lny / sqrtNd) * force
+            if (letter.snapped) {
+              // Snapped: repel particles away from letter boundary
+              if (lnd < 1 && lnd > 0.01) {
+                const sqrtNd = Math.sqrt(lnd)
+                const penetration = 1 - sqrtNd
+                const force = penetration * penetration * PARTICLE_LETTER_REPEL
+                p.vx += (lnx / sqrtNd) * force
+                p.vy += (lny / sqrtNd) * force
+              }
+            } else {
+              // Unsnapped: tight orbit — particles hug close to scattered letters
+              const attractRadius = 1.3
+
+              if (lnd < attractRadius * attractRadius && lnd > 0.01) {
+                const sqrtNd = Math.sqrt(lnd)
+                // Strong pull keeps particles in a tight ring
+                const pull = (1 - sqrtNd / attractRadius) * 0.07
+                p.vx -= (lnx / sqrtNd) * pull
+                p.vy -= (lny / sqrtNd) * pull
+                // Tangential drift so particles orbit rather than clump
+                p.vx += (lny / sqrtNd) * 0.08
+                p.vy -= (lnx / sqrtNd) * 0.08
+              }
+              // Repel if overlapping the letter
+              if (lnd < 1 && lnd > 0.01) {
+                const sqrtNd = Math.sqrt(lnd)
+                const push = (1 - sqrtNd) * 0.5
+                p.vx += (lnx / sqrtNd) * push
+                p.vy += (lny / sqrtNd) * push
+              }
             }
+          }
+        }
+
+        // Inter-particle repulsion — prevents clumping
+        const REPEL_DIST = 30
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j]
+          const rdx = p.x - q.x
+          const rdy = p.y - q.y
+          const rd2 = rdx * rdx + rdy * rdy
+          if (rd2 < REPEL_DIST * REPEL_DIST && rd2 > 1) {
+            const rd = Math.sqrt(rd2)
+            const repel = (1 - rd / REPEL_DIST) * 0.08
+            const rx = (rdx / rd) * repel
+            const ry = (rdy / rd) * repel
+            p.vx += rx; p.vy += ry
+            q.vx -= rx; q.vy -= ry
           }
         }
 
@@ -618,9 +687,10 @@ export function useTopoAnimation(
       // Floating particles — drawn before coral so they pick up the tint
       drawParticles()
 
-      // Coral accent: tint existing ink near cursor (no double-stroke)
+      // Coral accent: tint existing ink near cursor (+ target when dragging)
       if (!isMobile && mouseX > -999) {
         ctx!.globalCompositeOperation = 'source-atop'
+        // Primary coral: always follows cursor
         const grad = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, CORAL_RADIUS)
         grad.addColorStop(0, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},0.85)`)
         grad.addColorStop(0.4, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},0.5)`)
@@ -628,11 +698,127 @@ export function useTopoAnimation(
         ctx!.fillStyle = grad
         ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
         ctx!.fillRect(mouseX - CORAL_RADIUS, mouseY - CORAL_RADIUS, CORAL_RADIUS * 2, CORAL_RADIUS * 2)
+
+        // Secondary coral: beacon at target position (faint even when far, strong when close)
+        const fb = dragFeedbackRef.current
+        if (fb && fb.active) {
+          const p = fb.proximity
+          const beaconAlpha = 0.08 + p * p * 0.65  // always-visible base + quadratic ramp
+          const beaconRadius = CORAL_RADIUS * (0.4 + p * 0.9)
+          const tGrad = ctx!.createRadialGradient(fb.targetX, fb.targetY, 0, fb.targetX, fb.targetY, beaconRadius)
+          tGrad.addColorStop(0, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${beaconAlpha})`)
+          tGrad.addColorStop(0.5, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${beaconAlpha * 0.4})`)
+          tGrad.addColorStop(1, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},0)`)
+          ctx!.fillStyle = tGrad
+          ctx!.fillRect(fb.targetX - beaconRadius, fb.targetY - beaconRadius, beaconRadius * 2, beaconRadius * 2)
+        }
         ctx!.globalCompositeOperation = 'source-over'
       }
     }
 
     // Erase letter ink bounds — shape-matched cutouts
+    function drawLetterRipples(): void {
+      if (letterRipples.length === 0) return
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+      const RING_COUNT = 3       // concentric rings trailing the leading edge
+      const RING_SPACING = 12    // px between rings
+
+      for (let ri = 0; ri < letterRipples.length; ri++) {
+        const ripple = letterRipples[ri]
+        if (ripple.age < 0) continue // staggered delay — not started yet
+
+        // Suppress when cursor is within the ripple radius
+        if (mouseX > -999) {
+          const mdx = mouseX - ripple.cx
+          const mdy = mouseY - ripple.cy
+          if (mdx * mdx + mdy * mdy < ripple.maxRadius * ripple.maxRadius) continue
+        }
+
+        const t = ripple.age / ripple.maxAge // 0→1 over lifetime
+
+        // Ease-out radius for leading edge — slower curve for gentle expansion
+        const easedT = 1 - Math.pow(1 - t, 3)
+        const leadRadius = easedT * ripple.maxRadius
+
+        // Draw multiple rings trailing behind the leading edge
+        for (let ring = 0; ring < RING_COUNT; ring++) {
+          const radius = leadRadius - ring * RING_SPACING
+          if (radius < 2) continue
+
+          // Each trailing ring is fainter
+          const ringFade = 1 - ring * 0.3
+
+          // Global fade: in briefly, hold, out
+          let opacity: number
+          if (t < 0.08) {
+            opacity = t / 0.08
+          } else if (t < 0.5) {
+            opacity = 1
+          } else {
+            opacity = 1 - (t - 0.5) / 0.5
+          }
+          opacity *= 0.14 * ringFade
+
+          // Thinner strokes for inner rings
+          const weight = ring === 0 ? 0.9 : 0.6
+
+          if (opacity < 0.01) continue
+
+          ctx!.beginPath()
+          ctx!.arc(ripple.cx, ripple.cy, radius, 0, Math.PI * 2)
+          ctx!.strokeStyle = `rgba(${CONTOUR_COLOR.r},${CONTOUR_COLOR.g},${CONTOUR_COLOR.b},${opacity})`
+          ctx!.lineWidth = weight
+          ctx!.stroke()
+        }
+      }
+    }
+
+    function drawCompletionShockwave(): void {
+      if (!completionShockwave.active) return
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+      const cx = canvasWidth / 2
+      const cy = canvasHeight * 0.45 // centered on name area
+      const maxR = Math.sqrt(canvasWidth * canvasWidth + canvasHeight * canvasHeight) * SHOCKWAVE_MAX_RADIUS_MULT
+      const t = completionShockwave.age / SHOCKWAVE_MAX_AGE
+
+      // Ease-out expansion
+      const easedT = 1 - Math.pow(1 - t, 2.5)
+      const leadRadius = easedT * maxR
+
+      for (let ring = 0; ring < SHOCKWAVE_RINGS; ring++) {
+        const radius = leadRadius - ring * SHOCKWAVE_RING_GAP
+        if (radius < 3) continue
+
+        const ringFade = 1 - ring * 0.2
+
+        // Fade: quick in, long hold, gradual out
+        let opacity: number
+        if (t < 0.05) {
+          opacity = t / 0.05
+        } else if (t < 0.4) {
+          opacity = 1
+        } else {
+          opacity = 1 - (t - 0.4) / 0.6
+        }
+        // Coral tint on first ring, contour color on trailing
+        const isCoral = ring === 0 && t < 0.3
+        const r = isCoral ? 232 : CONTOUR_COLOR.r
+        const g = isCoral ? 82 : CONTOUR_COLOR.g
+        const b = isCoral ? 63 : CONTOUR_COLOR.b
+        opacity *= (isCoral ? 0.3 : 0.18) * ringFade
+
+        if (opacity < 0.01) continue
+
+        ctx!.beginPath()
+        ctx!.arc(cx, cy, radius, 0, Math.PI * 2)
+        ctx!.strokeStyle = `rgba(${r},${g},${b},${opacity})`
+        ctx!.lineWidth = ring === 0 ? 1.2 : 0.7
+        ctx!.stroke()
+      }
+    }
+
     function eraseLetterShapes(): void {
       const letters = lettersRef.current
       if (!letters || letters.length === 0) return
@@ -643,6 +829,7 @@ export function useTopoAnimation(
       for (let li = 0; li < letters.length; li++) {
         const letter = letters[li]
         if (letter.char === ' ' || letter.char === '\u00A0') continue
+        if (!letter.snapped) continue  // only cut out snapped letters
 
         const halfLeading = (letter.height - letter.fontSize) * 0.5
         let inkTop = letter.y + halfLeading
@@ -736,6 +923,78 @@ export function useTopoAnimation(
       prevMouseX = mouseX
       prevMouseY = mouseY
 
+      // Hot/cold drag feedback — inject waves at letter AND target positions
+      const feedback = dragFeedbackRef.current
+      if (feedback && feedback.active) {
+        const p = feedback.proximity  // 0→far, 1→at target
+
+        // --- Directional ripple beam toward target ---
+        // Narrow, low-energy drops extending from the letter toward the target.
+        // Creates a subtle "pointer" that fades quickly, not a broad splash.
+        if (frameCount % 3 === 0) {
+          const lgx = toGridX(feedback.letterX)
+          const lgy = toGridY(feedback.letterY)
+          const dx = feedback.targetX - feedback.letterX
+          const dy = feedback.targetY - feedback.letterY
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          if (dist > 1) {
+            const nx = dx / dist
+            const ny = dy / dist
+            // Tight ripple on the letter — saturate prevents stacking on slow drags
+            dropWave(lgx, lgy, 0.005, 3, true)
+            // Jittered accent — one small drop at a random offset along the target direction
+            const jitterDist = 6 + Math.random() * 14  // 6–20 grid cells out
+            const perpJitter = (Math.random() - 0.5) * 3 // slight sideways wobble
+            const jx = lgx + nx * jitterDist + ny * perpJitter
+            const jy = lgy + ny * jitterDist - nx * perpJitter
+            dropWave(jx, jy, 0.004, 2)
+          } else {
+            dropWave(lgx, lgy, 0.006, 3)
+          }
+        }
+
+        // Scatter particles away from dragged letter
+        for (let i = 0; i < particles.length; i++) {
+          const part = particles[i]
+          const dx = part.x - feedback.letterX
+          const dy = part.y - feedback.letterY
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < 160 && dist > 5) {
+            const force = (1 - dist / 160) * 0.15
+            part.vx += (dx / dist) * force
+            part.vy += (dy / dist) * force
+          }
+        }
+
+        // --- Beacon at TARGET position (always present, intensifies with proximity) ---
+        // Even far away, a faint pulse hints at the correct position
+        const pulseInterval = Math.max(1, Math.round(8 - p * 6))
+        if (frameCount % pulseInterval === 0) {
+          const tgx = toGridX(feedback.targetX)
+          const tgy = toGridY(feedback.targetY)
+          const str = 0.003 + p * p * 0.025  // base pulse even at p≈0
+          const rad = 3 + p * 4
+          dropWave(tgx, tgy, str, rad)
+        }
+
+        // Attract nearby particles toward the target when getting warm
+        if (p > 0.2) {
+          const attractStr = (p - 0.2) * 0.18
+          for (let i = 0; i < particles.length; i++) {
+            const part = particles[i]
+            const dx = feedback.targetX - part.x
+            const dy = feedback.targetY - part.y
+            const dist = Math.sqrt(dx * dx + dy * dy)
+            if (dist < 200 && dist > 5) {
+              const pull = attractStr * (1 - dist / 200)
+              part.vx += (dx / dist) * pull
+              part.vy += (dy / dist) * pull
+            }
+          }
+        }
+      }
+
       // Letter pick-up / drop ripples
       const letters = lettersRef.current
       if (letters) {
@@ -756,7 +1015,7 @@ export function useTopoAnimation(
         }
       }
 
-      // Puzzle completion burst — wave from every letter + central pulse + particle scatter
+      // Puzzle completion burst — wave from every letter + central pulse + particle scatter + shockwave
       if (completionBurstRef.current) {
         completionBurstRef.current = false
         const burstLetters = lettersRef.current
@@ -782,6 +1041,16 @@ export function useTopoAnimation(
             p.vy += (dy / dist) * 5
           }
         }
+        // Full-screen shockwave — expanding rings from center
+        completionShockwave.active = true
+        completionShockwave.age = 0
+      }
+      // Render completion shockwave — multiple rings expanding from center
+      if (completionShockwave.active) {
+        completionShockwave.age++
+        if (completionShockwave.age > SHOCKWAVE_MAX_AGE) {
+          completionShockwave.active = false
+        }
       }
 
       updateBoundary()
@@ -792,11 +1061,44 @@ export function useTopoAnimation(
         ambientDrop()
       }
 
+      // Sustained point-source ripples from unsnapped letters.
+      // A single impulse dies too fast (damping 0.945 kills it in ~10 frames).
+      // Instead: pick a letter every ~2s, then feed it energy over 30 frames so
+      // the ring has time to visibly expand outward before fading.
+      // Spawn ripples on all unsnapped letters — staggered start so they don't pulse in unison
+      if (frameCount % LETTER_RIPPLE_INTERVAL === 0) {
+        const pLetters = lettersRef.current
+        if (pLetters) {
+          for (let li = 0; li < pLetters.length; li++) {
+            const letter = pLetters[li]
+            if (letter.char === ' ' || letter.char === '\u00A0' || letter.snapped || letter.dragging) continue
+            // Random stagger so letters never sync up — spread across half the interval
+            const delay = Math.floor(Math.random() * (LETTER_RIPPLE_INTERVAL * 0.5))
+            letterRipples.push({
+              cx: letter.x + letter.width / 2,
+              cy: letter.y + letter.height / 2,
+              age: -delay,
+              maxAge: LETTER_RIPPLE_MAX_AGE,
+              maxRadius: LETTER_RIPPLE_MAX_RADIUS,
+            })
+          }
+        }
+      }
+      // Age all active ripples, remove expired
+      for (let ri = letterRipples.length - 1; ri >= 0; ri--) {
+        letterRipples[ri].age++
+        if (letterRipples[ri].age >= letterRipples[ri].maxAge) {
+          letterRipples.splice(ri, 1)
+        }
+      }
+
       // === Rendering: throttled when behind frame budget ===
       if (frameCount % renderSkip === 0) {
         ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
         ctx!.clearRect(0, 0, canvasWidth, canvasHeight)
         drawContours()
+        drawLetterRipples()
+        drawCompletionShockwave()
         eraseLetterShapes()
       }
 
@@ -829,6 +1131,8 @@ export function useTopoAnimation(
         ctx!.clearRect(0, 0, canvasWidth, canvasHeight)
         updateBoundary()
         drawContours()
+        drawLetterRipples()
+        drawCompletionShockwave()
         eraseLetterShapes()
       }
     })
