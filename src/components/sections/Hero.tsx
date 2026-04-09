@@ -11,7 +11,7 @@ interface HeroProps {
 }
 
 export default function Hero({ id }: HeroProps) {
-  const { puzzleSolved } = usePuzzle()
+  const { puzzleSolved, resetPuzzle } = usePuzzle()
   const [showArrow, setShowArrow] = useState(false)
   const [showSubtitle, setShowSubtitle] = useState(false)
 
@@ -28,10 +28,6 @@ export default function Hero({ id }: HeroProps) {
     <section
       id={id}
       className="relative min-h-screen flex items-center justify-center bg-[var(--color-map-white)]"
-      style={{
-        backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px)',
-        backgroundSize: '40px 40px',
-      }}
     >
       <TopoCanvas />
 
@@ -51,6 +47,27 @@ export default function Hero({ id }: HeroProps) {
       >
         purdue cs + 4 years building systems that run at inference speed
       </motion.p>
+
+      {/* Reset puzzle button — appears after solve */}
+      {puzzleSolved && showArrow && (
+        <button
+          onClick={resetPuzzle}
+          className="absolute z-30 text-stone-300 hover:text-stone-500 transition-colors"
+          style={{
+            bottom: '2.5rem',
+            right: '2rem',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--text-mono-label)',
+            letterSpacing: 'var(--text-mono-label--letter-spacing)',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          aria-label="Reset puzzle"
+        >
+          replay ↻
+        </button>
+      )}
 
       {/* Scroll indicator — fades in after puzzle unlock */}
       <div

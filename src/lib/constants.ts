@@ -4,7 +4,7 @@ import type { NavItem, SocialLink } from './types'
 export const SITE_CONFIG = {
   name: "Maximus Beato",
   title: "Maximus Beato - Portfolio",
-  description: "Modern portfolio website showcasing innovative projects and technical expertise in full-stack development.",
+  description: "max beato — purdue cs. i build fast systems: tonos (voice profiling api), vtx (athlete composite scoring), apimesh (mcp tool orchestration).",
   url: "https://maximusbeato.com",
   email: "maximus.beato@gmail.com",
   location: "West Lafayette, IN", // Replace with actual location

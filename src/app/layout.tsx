@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: "Maximus Beato - Portfolio",
     template: "%s | Maximus Beato"
   },
-  description: "Modern portfolio website showcasing innovative projects and technical expertise in full-stack development, built with Next.js and cutting-edge web technologies.",
+  description: "max beato — purdue cs. i build fast systems: tonos (voice profiling api), vtx (athlete composite scoring), apimesh (mcp tool orchestration).",
   keywords: [
     "portfolio",
     "developer",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://maximusbeato.com",
     title: "Maximus Beato - Portfolio",
-    description: "Modern portfolio website showcasing innovative projects and technical expertise in full-stack development.",
+    description: "max beato — purdue cs. i build fast systems: tonos (voice profiling api), vtx (athlete composite scoring), apimesh (mcp tool orchestration).",
     siteName: "Maximus Beato Portfolio",
     images: [
       {
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Maximus Beato - Portfolio",
-    description: "Modern portfolio website showcasing innovative projects and technical expertise.",
+    description: "max beato — purdue cs. i build fast systems: tonos, vtx, apimesh.",
     images: ["/og-image.png"]
   },
   robots: {
