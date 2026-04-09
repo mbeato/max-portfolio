@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Design System** - Implement topographic tokens, typography, and motion vocabulary (completed 2026-04-07)
 - [ ] **Phase 3: Content & Case Studies** - Extract real content from codebases, build case study pages
 - [ ] **Phase 4: Topographic Animation** - Build the hero canvas animation and SVG section accents
-- [ ] **Phase 5: Home Page Assembly** - Wire all home sections together with final copy and navigation
+- [x] **Phase 5: Home Page Assembly** - Wire all home sections together with final copy and navigation (completed 2026-04-08)
 - [ ] **Phase 6: Polish & Performance** - Validate performance, mobile, and anti-slop compliance
 
 ## Phase Details
@@ -112,13 +112,13 @@ Plans:
   8. Each section has its own scroll animation treatment — NOT uniform fade-in-on-scroll across all sections
   9. Resume PDF downloadable from both navigation and contact section
   10. Anti-slop gate: no bento grid, no uniform scroll animations, no skill bars, no tech logo grid, no generic CTAs, no shadcn default styling
-**Plans:** 4 plans
+**Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 05-01-PLAN.md — Hero post-solve subtitle + About section (bio, photos, scroll animations)
-- [ ] 05-02-PLAN.md — Experience section (3 work entries) + Projects section (4 case study cards)
-- [ ] 05-03-PLAN.md — Contact copy/style rewrite + Navigation resume button fix
-- [ ] 05-04-PLAN.md — TopoSvgDivider wiring in page.tsx + full page visual checkpoint
+- [x] 05-01-PLAN.md — Hero post-solve subtitle + About section (bio, photos, scroll animations)
+- [x] 05-02-PLAN.md — Experience section (3 work entries) + Projects section (4 case study cards)
+- [x] 05-03-PLAN.md — Contact copy/style rewrite + Navigation resume button fix
+- [x] 05-04-PLAN.md — TopoSvgDivider wiring in page.tsx + full page visual checkpoint
 
 **UI hint**: yes
 
@@ -132,7 +132,11 @@ Plans:
   3. Lighthouse performance score >= 90 on both home page and at least one case study page
   4. Zero instances of any copy pattern from the anti-slop list — all 15 checklist items from DESIGN.md section 9 pass
   5. Each case study is scannable in 90 seconds — hook visible above the fold, approach and outcome reachable without searching
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Anti-slop copy fix (metadata rewrite), image sizes optimization, About photo grid mobile fix
+- [ ] 06-02-PLAN.md — Lighthouse performance audit + mobile responsive checkpoint + case study scannability + visual anti-slop review
 
 ## Progress
 
@@ -146,5 +150,5 @@ Note: Phase 4 depends on Phase 2, Phase 5 depends on both Phase 3 and Phase 4.
 | 2. Design System | 4/4 | Complete   | 2026-04-07 |
 | 3. Content & Case Studies | 2/2 | Complete   | 2026-04-07 |
 | 4. Hero Animation & Puzzle Gate | 2/3 + unplanned | Complete (04-03 audit deferred to P6) | 2026-04-08 |
-| 5. Home Page Assembly | 0/4 | Planned | - |
-| 6. Polish & Performance | 0/TBD | Not started | - |
+| 5. Home Page Assembly | 4/4 | Complete | 2026-04-08 |
+| 6. Polish & Performance | 0/2 | Not started | - |
