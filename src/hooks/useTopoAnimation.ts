@@ -7,10 +7,10 @@ import { usePerformance } from '@/components/ui/PerformanceProvider'
 
 // Tier configs — wave simulation grid sizes
 const TIER = {
-  high:   { cols: 200, rows: 120, thresholds: 5, particles: 140 },
-  medium: { cols: 150, rows: 90,  thresholds: 4, particles: 100 },
-  low:    { cols: 100, rows: 60,  thresholds: 3, particles: 55 },
-  mobile: { cols: 80,  rows: 50,  thresholds: 3, particles: 35 },
+  high:   { cols: 200, thresholds: 5, particles: 140 },
+  medium: { cols: 150, thresholds: 4, particles: 100 },
+  low:    { cols: 100, thresholds: 3, particles: 55 },
+  mobile: { cols: 80,  thresholds: 3, particles: 35 },
 } as const
 
 const CORAL_COLOR = { r: 232, g: 82, b: 63 }
@@ -43,6 +43,7 @@ const PARTICLE_MAX_OPACITY = 0.4
 const PARTICLE_LETTER_BURST = 3.0
 const PARTICLE_LETTER_REPEL = 0.8
 const PARTICLE_LETTER_PAD = 15
+const PARTICLE_REPEL_DIST = 30
 
 // Per-character boundary shapes — better letter fidelity
 const CHAR_BOUNDARY: Record<string, { shape: 'ellipse' | 'rect'; heightScale?: number }> = {
@@ -136,7 +137,15 @@ export function useTopoAnimation(
     const tier = detectTier(isMobile, isLowEndRef.current)
     const config = TIER[tier]
     const COLS = config.cols
-    const ROWS = config.rows
+
+    // Compute ROWS from initial canvas aspect ratio so grid cells stay square.
+    // Without this, a portrait mobile viewport stretches the contour lines vertically
+    // because the fixed 1.6:1 grid is mapped onto a ~0.46:1 canvas.
+    const parent = canvas.parentElement
+    const initW = parent?.clientWidth || window.innerWidth
+    const initH = parent?.clientHeight || window.innerHeight
+    // Cap ROWS so portrait mobile doesn't blow up physics cost (80×173 = 13.8K vs intended ~4K)
+    const ROWS = Math.min(Math.max(30, Math.round(COLS * (initH / initW))), Math.round(COLS * 1.8))
     const SIZE = COLS * ROWS
 
     // Single unified wave field
@@ -195,25 +204,49 @@ export function useTopoAnimation(
     let offScreen = false
     const prevDragging = new Uint8Array(20)
 
-    // Adaptive performance — physics always runs, rendering throttles if behind
+    // Adaptive performance — degrades gracefully across 4 levels:
+    //   Level 0: full quality (physics 60fps, render 60fps, shadows, O(n²) repulsion)
+    //   Level 1: render throttle (physics 60fps, render 30fps)
+    //   Level 2: physics throttle (physics 30fps, render 30fps, no particle shadows)
+    //   Level 3: minimal (physics 30fps, render 20fps, no shadows, no repulsion, fewer particles)
     let lastTickTime = performance.now()
-    let renderSkip = 1            // 1 = every frame, 2+ = skip rendering
+    let perfLevel = 0
+    let renderSkip = 1
+    let physicsSkip = 1
+    let enableParticleShadows = true
+    let enableRepulsion = true
+    let activeParticleCount: number = config.particles
     const frameTimeBuf: number[] = []
-    const FT_WINDOW = 40
-    const TARGET_MS = 20          // degrade if avg frame > 20ms (~50fps)
-    const RECOVER_MS = 13         // recover if avg frame < 13ms (~77fps)
+    const FT_WINDOW = 30
+    const DEGRADE_MS = 18         // degrade if avg frame > 18ms (~55fps)
+    const RECOVER_MS = 12         // recover if avg frame < 12ms (~83fps)
 
     function adaptPerformance(now: number): void {
       const dt = now - lastTickTime
       lastTickTime = now
-      if (dt > 0 && dt < 200) {   // ignore tab-switch spikes
+      if (dt > 0 && dt < 200) {
         frameTimeBuf.push(dt)
         if (frameTimeBuf.length > FT_WINDOW) frameTimeBuf.shift()
       }
       if (frameCount % FT_WINDOW === 0 && frameTimeBuf.length >= FT_WINDOW) {
-        const avg = frameTimeBuf.reduce((a, b) => a + b) / frameTimeBuf.length
-        if (avg > TARGET_MS && renderSkip < 3) renderSkip++
-        else if (avg < RECOVER_MS && renderSkip > 1) renderSkip--
+        let sum = 0
+        for (let i = 0; i < frameTimeBuf.length; i++) sum += frameTimeBuf[i]
+        const avg = sum / frameTimeBuf.length
+
+        if (avg > DEGRADE_MS && perfLevel < 3) {
+          perfLevel++
+        } else if (avg < RECOVER_MS && perfLevel > 0) {
+          perfLevel--
+        }
+
+        // Apply level settings
+        renderSkip = perfLevel >= 3 ? 3 : perfLevel >= 1 ? 2 : 1
+        physicsSkip = perfLevel >= 2 ? 2 : 1
+        enableParticleShadows = perfLevel < 2
+        enableRepulsion = perfLevel < 3
+        activeParticleCount = perfLevel >= 3
+          ? Math.round(config.particles * 0.6)
+          : config.particles
       }
     }
 
@@ -464,7 +497,8 @@ export function useTopoAnimation(
     }
 
     function updateParticles(): void {
-      for (let i = 0; i < particles.length; i++) {
+      const count = Math.min(activeParticleCount, particles.length)
+      for (let i = 0; i < count; i++) {
         const p = particles[i]
 
         // Distance to cursor — reused for repulsion + wave force damping
@@ -566,20 +600,21 @@ export function useTopoAnimation(
           }
         }
 
-        // Inter-particle repulsion — prevents clumping
-        const REPEL_DIST = 30
-        for (let j = i + 1; j < particles.length; j++) {
-          const q = particles[j]
-          const rdx = p.x - q.x
-          const rdy = p.y - q.y
-          const rd2 = rdx * rdx + rdy * rdy
-          if (rd2 < REPEL_DIST * REPEL_DIST && rd2 > 1) {
-            const rd = Math.sqrt(rd2)
-            const repel = (1 - rd / REPEL_DIST) * 0.08
-            const rx = (rdx / rd) * repel
-            const ry = (rdy / rd) * repel
-            p.vx += rx; p.vy += ry
-            q.vx -= rx; q.vy -= ry
+        // Inter-particle repulsion — prevents clumping (skipped at perfLevel 3)
+        if (enableRepulsion) {
+          for (let j = i + 1; j < count; j++) {
+            const q = particles[j]
+            const rdx = p.x - q.x
+            const rdy = p.y - q.y
+            const rd2 = rdx * rdx + rdy * rdy
+            if (rd2 < PARTICLE_REPEL_DIST * PARTICLE_REPEL_DIST && rd2 > 1) {
+              const rd = Math.sqrt(rd2)
+              const repel = (1 - rd / PARTICLE_REPEL_DIST) * 0.08
+              const rx = (rdx / rd) * repel
+              const ry = (rdy / rd) * repel
+              p.vx += rx; p.vy += ry
+              q.vx -= rx; q.vy -= ry
+            }
           }
         }
 
@@ -606,13 +641,16 @@ export function useTopoAnimation(
     function drawParticles(): void {
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // Drop shadow — set once, applies to all particle draws
-      ctx!.shadowColor = 'rgba(0,0,0,0.14)'
-      ctx!.shadowBlur = 8
-      ctx!.shadowOffsetX = 2
-      ctx!.shadowOffsetY = 3
+      // Drop shadow — skipped at perfLevel 2+ to reduce GPU compositing
+      if (enableParticleShadows) {
+        ctx!.shadowColor = 'rgba(0,0,0,0.14)'
+        ctx!.shadowBlur = 8
+        ctx!.shadowOffsetX = 2
+        ctx!.shadowOffsetY = 3
+      }
 
-      for (let i = 0; i < particles.length; i++) {
+      const count = Math.min(activeParticleCount, particles.length)
+      for (let i = 0; i < count; i++) {
         const p = particles[i]
         const gx = Math.floor(toGridX(p.x))
         const gy = Math.floor(toGridY(p.y))
@@ -644,7 +682,8 @@ export function useTopoAnimation(
       const cy = letter.y + letter.height / 2
       const radius = Math.max(letter.width, letter.height) * 0.8
 
-      for (let i = 0; i < particles.length; i++) {
+      const count = Math.min(activeParticleCount, particles.length)
+      for (let i = 0; i < count; i++) {
         const p = particles[i]
         const dx = p.x - cx
         const dy = p.y - cy
@@ -658,11 +697,11 @@ export function useTopoAnimation(
     }
 
     const pathGen = geoPath(null, ctx!)
+    const contourGen = contours().size([COLS, ROWS]).thresholds(thresholds)
     ctx.lineJoin = 'round'
     ctx.lineCap = 'round'
 
     function drawContours(): void {
-      const contourGen = contours().size([COLS, ROWS]).thresholds(thresholds)
       const polygons = contourGen(height as unknown as number[])
 
       const scaleX = canvasWidth / COLS
@@ -702,18 +741,31 @@ export function useTopoAnimation(
         ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
         ctx!.fillRect(mouseX - CORAL_RADIUS, mouseY - CORAL_RADIUS, CORAL_RADIUS * 2, CORAL_RADIUS * 2)
 
-        // Secondary coral: beacon at target position (faint even when far, strong when close)
+        // Coral beacon at target position — tint on existing ink + standalone glow
         const fb = dragFeedbackRef.current
         if (fb && fb.active) {
           const p = fb.proximity
-          const beaconAlpha = 0.08 + p * p * 0.65  // always-visible base + quadratic ramp
-          const beaconRadius = CORAL_RADIUS * (0.4 + p * 0.9)
+          // Tint existing contour ink at target (source-atop)
+          const beaconAlpha = 0.12 + p * p * 0.65
+          const beaconRadius = CORAL_RADIUS * (0.5 + p * 0.9)
           const tGrad = ctx!.createRadialGradient(fb.targetX, fb.targetY, 0, fb.targetX, fb.targetY, beaconRadius)
           tGrad.addColorStop(0, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${beaconAlpha})`)
           tGrad.addColorStop(0.5, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${beaconAlpha * 0.4})`)
           tGrad.addColorStop(1, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},0)`)
           ctx!.fillStyle = tGrad
           ctx!.fillRect(fb.targetX - beaconRadius, fb.targetY - beaconRadius, beaconRadius * 2, beaconRadius * 2)
+
+          // Standalone pulsing glow — visible even without contour ink at target
+          ctx!.globalCompositeOperation = 'source-over'
+          const pulse = 0.5 + 0.5 * Math.sin(frameCount * 0.08)
+          const glowAlpha = (0.15 + p * 0.35) * (0.7 + pulse * 0.3)
+          const glowRadius = 20 + p * 30
+          const tGlow = ctx!.createRadialGradient(fb.targetX, fb.targetY, 0, fb.targetX, fb.targetY, glowRadius)
+          tGlow.addColorStop(0, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${glowAlpha})`)
+          tGlow.addColorStop(0.4, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${glowAlpha * 0.5})`)
+          tGlow.addColorStop(1, `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},0)`)
+          ctx!.fillStyle = tGlow
+          ctx!.fillRect(fb.targetX - glowRadius, fb.targetY - glowRadius, glowRadius * 2, glowRadius * 2)
         }
         ctx!.globalCompositeOperation = 'source-over'
       }
@@ -761,20 +813,47 @@ export function useTopoAnimation(
           } else {
             opacity = 1 - (t - 0.5) / 0.5
           }
-          opacity *= 0.14 * ringFade
 
-          // Thinner strokes for inner rings
-          const weight = ring === 0 ? 0.9 : 0.6
+          // Color: neon coral at center, fading to contour color at outer edge
+          // expansion = how far this ring is from center (0 = origin, 1 = max radius)
+          const expansion = radius / ripple.maxRadius
+          const coralMix = Math.min(1, Math.pow(1 - expansion, 1.5) * 1.4) // saturated coral near center
+          const r = Math.round(CORAL_COLOR.r * coralMix + CONTOUR_COLOR.r * (1 - coralMix))
+          const g = Math.round(CORAL_COLOR.g * coralMix + CONTOUR_COLOR.g * (1 - coralMix))
+          const b = Math.round(CORAL_COLOR.b * coralMix + CONTOUR_COLOR.b * (1 - coralMix))
+
+          // Inner rings: very strong opacity for unmissable neon glow
+          const coralBoost = 1 + coralMix * 6 // up to 7x brighter at center
+          opacity *= 0.18 * ringFade * coralBoost
+
+          // Thicker strokes near center for glow weight
+          const weight = ring === 0 ? (1.2 + coralMix * 1.8) : (0.7 + coralMix * 1.0)
 
           if (opacity < 0.01) continue
 
+          // Neon glow — strong shadow on inner coral rings (disabled at perfLevel 2+)
+          if (coralMix > 0.2 && enableParticleShadows) {
+            ctx!.shadowColor = `rgba(${CORAL_COLOR.r},${CORAL_COLOR.g},${CORAL_COLOR.b},${Math.min(1, opacity * coralMix * 1.5)})`
+            ctx!.shadowBlur = 8 + coralMix * 14
+          } else {
+            ctx!.shadowColor = 'transparent'
+            ctx!.shadowBlur = 0
+          }
+
           ctx!.beginPath()
           ctx!.arc(ripple.cx, ripple.cy, radius, 0, Math.PI * 2)
-          ctx!.strokeStyle = `rgba(${CONTOUR_COLOR.r},${CONTOUR_COLOR.g},${CONTOUR_COLOR.b},${opacity})`
+          ctx!.strokeStyle = `rgba(${r},${g},${b},${opacity})`
           ctx!.lineWidth = weight
           ctx!.stroke()
         }
+
       }
+
+      // Reset all shadow properties — drawParticles sets offsets that would leak here
+      ctx!.shadowColor = 'transparent'
+      ctx!.shadowBlur = 0
+      ctx!.shadowOffsetX = 0
+      ctx!.shadowOffsetY = 0
     }
 
     function drawCompletionShockwave(): void {
@@ -807,9 +886,9 @@ export function useTopoAnimation(
         }
         // Coral tint on first ring, contour color on trailing
         const isCoral = ring === 0 && t < 0.3
-        const r = isCoral ? 232 : CONTOUR_COLOR.r
-        const g = isCoral ? 82 : CONTOUR_COLOR.g
-        const b = isCoral ? 63 : CONTOUR_COLOR.b
+        const r = isCoral ? CORAL_COLOR.r : CONTOUR_COLOR.r
+        const g = isCoral ? CORAL_COLOR.g : CONTOUR_COLOR.g
+        const b = isCoral ? CORAL_COLOR.b : CONTOUR_COLOR.b
         opacity *= (isCoral ? 0.3 : 0.18) * ringFade
 
         if (opacity < 0.01) continue
@@ -871,8 +950,9 @@ export function useTopoAnimation(
       const now = performance.now()
       adaptPerformance(now)
       frameCount++
+      const runPhysics = frameCount % physicsSkip === 0
 
-      // === Physics: always runs at full rate ===
+      // === Input processing: runs every frame ===
 
       // Smooth mouse — detect raw position jumps (pointer capture release)
       let mouseJumped = false
@@ -928,39 +1008,53 @@ export function useTopoAnimation(
       prevMouseX = mouseX
       prevMouseY = mouseY
 
-      // Hot/cold drag feedback — inject waves at letter AND target positions
+      // Hot/cold drag feedback
       const feedback = dragFeedbackRef.current
       if (feedback && feedback.active) {
         const p = feedback.proximity  // 0→far, 1→at target
 
-        // --- Directional ripple beam toward target ---
-        // Narrow, low-energy drops extending from the letter toward the target.
-        // Creates a subtle "pointer" that fades quickly, not a broad splash.
-        if (frameCount % 3 === 0) {
-          const lgx = toGridX(feedback.letterX)
-          const lgy = toGridY(feedback.letterY)
-          const dx = feedback.targetX - feedback.letterX
-          const dy = feedback.targetY - feedback.letterY
-          const dist = Math.sqrt(dx * dx + dy * dy)
+        // Wave injection gated to physics rate to prevent energy accumulation
+        if (runPhysics) {
+          // Directional ripple beam toward target
+          if (frameCount % 2 === 0) {
+            const lgx = toGridX(feedback.letterX)
+            const lgy = toGridY(feedback.letterY)
+            const tgx = toGridX(feedback.targetX)
+            const tgy = toGridY(feedback.targetY)
+            const dx = tgx - lgx
+            const dy = tgy - lgy
+            const gridDist = Math.sqrt(dx * dx + dy * dy)
 
-          if (dist > 1) {
-            const nx = dx / dist
-            const ny = dy / dist
-            // Tight ripple on the letter — saturate prevents stacking on slow drags
-            dropWave(lgx, lgy, 0.005, 3, true)
-            // Jittered accent — one small drop at a random offset along the target direction
-            const jitterDist = 6 + Math.random() * 14  // 6–20 grid cells out
-            const perpJitter = (Math.random() - 0.5) * 3 // slight sideways wobble
-            const jx = lgx + nx * jitterDist + ny * perpJitter
-            const jy = lgy + ny * jitterDist - nx * perpJitter
-            dropWave(jx, jy, 0.004, 2)
-          } else {
-            dropWave(lgx, lgy, 0.006, 3)
+            if (gridDist > 1) {
+              const nx = dx / gridDist
+              const ny = dy / gridDist
+              dropWave(lgx, lgy, 0.005, 3, true)
+              const along = Math.min(gridDist * 0.1, 5)
+              if (along <= gridDist * 0.7) {
+                const perpJitter = (Math.random() - 0.5) * 1.5
+                const jx = lgx + nx * along + ny * perpJitter
+                const jy = lgy + ny * along - nx * perpJitter
+                dropWave(jx, jy, 0.005 + p * 0.012, 2)
+              }
+            } else {
+              dropWave(lgx, lgy, 0.01, 3)
+            }
+          }
+
+          // Beacon at target position
+          const pulseInterval = Math.max(1, Math.round(5 - p * 4))
+          if (frameCount % pulseInterval === 0) {
+            const tgx = toGridX(feedback.targetX)
+            const tgy = toGridY(feedback.targetY)
+            const str = 0.012 + p * p * 0.03
+            const rad = 5 + p * 5
+            dropWave(tgx, tgy, str, rad)
           }
         }
 
-        // Scatter particles away from dragged letter
-        for (let i = 0; i < particles.length; i++) {
+        // Particle effects run every frame (they affect velocity, not wave physics)
+        const pCount = Math.min(activeParticleCount, particles.length)
+        for (let i = 0; i < pCount; i++) {
           const part = particles[i]
           const dx = part.x - feedback.letterX
           const dy = part.y - feedback.letterY
@@ -972,30 +1066,17 @@ export function useTopoAnimation(
           }
         }
 
-        // --- Beacon at TARGET position (always present, intensifies with proximity) ---
-        // Even far away, a faint pulse hints at the correct position
-        const pulseInterval = Math.max(1, Math.round(8 - p * 6))
-        if (frameCount % pulseInterval === 0) {
-          const tgx = toGridX(feedback.targetX)
-          const tgy = toGridY(feedback.targetY)
-          const str = 0.003 + p * p * 0.025  // base pulse even at p≈0
-          const rad = 3 + p * 4
-          dropWave(tgx, tgy, str, rad)
-        }
-
-        // Attract nearby particles toward the target when getting warm
-        if (p > 0.2) {
-          const attractStr = (p - 0.2) * 0.18
-          for (let i = 0; i < particles.length; i++) {
-            const part = particles[i]
-            const dx = feedback.targetX - part.x
-            const dy = feedback.targetY - part.y
-            const dist = Math.sqrt(dx * dx + dy * dy)
-            if (dist < 200 && dist > 5) {
-              const pull = attractStr * (1 - dist / 200)
-              part.vx += (dx / dist) * pull
-              part.vy += (dy / dist) * pull
-            }
+        const attractStr = 0.06 + p * 0.25
+        for (let i = 0; i < pCount; i++) {
+          const part = particles[i]
+          const dx = feedback.targetX - part.x
+          const dy = feedback.targetY - part.y
+          const dist2 = dx * dx + dy * dy
+          if (dist2 < 62500 && dist2 > 25) {
+            const dist = Math.sqrt(dist2)
+            const pull = attractStr * (1 - dist / 250)
+            part.vx += (dx / dist) * pull
+            part.vy += (dy / dist) * pull
           }
         }
       }
@@ -1058,12 +1139,15 @@ export function useTopoAnimation(
         }
       }
 
-      updateBoundary()
-      stepWave()
-      updateParticles()
+      // Physics: throttled at perfLevel 2+ (30fps physics still looks smooth with wave damping)
+      if (runPhysics) {
+        updateBoundary()
+        stepWave()
+        updateParticles()
 
-      if (frameCount % AMBIENT_INTERVAL === 0) {
-        ambientDrop()
+        if (frameCount % AMBIENT_INTERVAL === 0) {
+          ambientDrop()
+        }
       }
 
       // Sustained point-source ripples from unsnapped letters.

@@ -18,6 +18,10 @@ export default function TopoCanvas() {
     setIsMobile(window.innerWidth < 768)
   }, [])
 
+  // Reduce canvas bleed on mobile — tall viewports don't need the extra overshoot
+  const bleedTop = isMobile ? '-2%' : '-10%'
+  const bleedBottom = isMobile ? '-5%' : '-30%'
+
   useTopoAnimation(canvasRef, { isMobile }, lettersRef, completionBurstRef, dragFeedbackRef)
 
   return (
@@ -27,10 +31,10 @@ export default function TopoCanvas() {
         aria-hidden="true"
         style={{
           position: 'absolute',
-          top: '-10%',
+          top: bleedTop,
           left: 0,
           right: 0,
-          bottom: '-30%',
+          bottom: bleedBottom,
           zIndex: 0,
           pointerEvents: 'none',
           maskImage: 'linear-gradient(to bottom, transparent 0%, black 8%, black 70%, transparent 100%)',
