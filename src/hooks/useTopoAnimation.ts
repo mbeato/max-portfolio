@@ -10,7 +10,7 @@ const TIER = {
   high:   { cols: 200, thresholds: 5, particles: 140 },
   medium: { cols: 150, thresholds: 4, particles: 100 },
   low:    { cols: 100, thresholds: 3, particles: 55 },
-  mobile: { cols: 80,  thresholds: 3, particles: 35 },
+  mobile: { cols: 60,  thresholds: 2, particles: 25 },
 } as const
 
 const CORAL_COLOR = { r: 232, g: 82, b: 63 }
@@ -210,10 +210,11 @@ export function useTopoAnimation(
     //   Level 2: physics throttle (physics 30fps, render 30fps, no particle shadows)
     //   Level 3: minimal (physics 30fps, render 20fps, no shadows, no repulsion, fewer particles)
     let lastTickTime = performance.now()
-    let perfLevel = 0
-    let renderSkip = 1
-    let physicsSkip = 1
-    let enableParticleShadows = true
+    // Mobile starts at level 2: 30fps physics+render, no shadows — prevents thermal throttling
+    let perfLevel = isMobile ? 2 : 0
+    let renderSkip = isMobile ? 2 : 1
+    let physicsSkip = isMobile ? 2 : 1
+    let enableParticleShadows = !isMobile
     let enableRepulsion = true
     let activeParticleCount: number = config.particles
     const frameTimeBuf: number[] = []
@@ -236,7 +237,9 @@ export function useTopoAnimation(
         if (avg > DEGRADE_MS && perfLevel < 3) {
           perfLevel++
         } else if (avg < RECOVER_MS && perfLevel > 0) {
-          perfLevel--
+          // Mobile floor: never recover below level 2 to prevent thermal throttling
+          const minLevel = isMobile ? 2 : 0
+          if (perfLevel > minLevel) perfLevel--
         }
 
         // Apply level settings
