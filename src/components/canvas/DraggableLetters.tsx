@@ -192,13 +192,16 @@ export default function DraggableLetters({ lettersRef, canvasRef, completionBurs
 
         let x: number, y: number
         let attempts = 0
+        // Extra bottom padding on mobile to avoid browser chrome (Safari toolbar ~80px)
+        const bottomPad = window.innerWidth < 768 ? 120 : EDGE_PAD
         const maxX = sectionRect.width - targets[i].width - EDGE_PAD
-        const maxY = sectionRect.height - targets[i].height - EDGE_PAD
+        const maxY = sectionRect.height - targets[i].height - bottomPad
         const MIN_SCATTER_DIST = 120 // minimum px between scattered letters
 
         do {
+          const topPad = window.innerWidth < 768 ? 80 : EDGE_PAD
           x = EDGE_PAD + Math.random() * Math.max(0, maxX - EDGE_PAD)
-          y = EDGE_PAD + Math.random() * Math.max(0, maxY - EDGE_PAD)
+          y = topPad + Math.random() * Math.max(0, maxY - topPad)
           attempts++
 
           const inAvoidZone = (
@@ -637,7 +640,7 @@ export default function DraggableLetters({ lettersRef, canvasRef, completionBurs
       {/* Skip button */}
       {!puzzleSolved && mounted && (
         <div
-          className="absolute bottom-8 left-0 right-0 text-center"
+          className="absolute bottom-8 pb-[env(safe-area-inset-bottom)] left-0 right-0 text-center"
           style={{
             opacity: skipVisible ? 1 : 0,
             transition: 'opacity 0.8s ease',

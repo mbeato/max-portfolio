@@ -30,7 +30,7 @@ export default function Hero({ id }: HeroProps) {
   return (
     <section
       id={id}
-      className="relative min-h-screen flex items-center justify-center bg-[var(--color-map-white)]"
+      className="relative min-h-dvh flex items-center justify-center bg-[var(--color-map-white)]"
     >
       <TopoCanvas />
 
@@ -73,7 +73,7 @@ export default function Hero({ id }: HeroProps) {
       {puzzleSolved && showArrow && (
         <button
           onClick={resetPuzzle}
-          className="absolute z-30 text-stone-300 hover:text-stone-500 transition-colors"
+          className="absolute z-30 text-stone-300 hover:text-stone-500 transition-colors pb-[env(safe-area-inset-bottom)]"
           style={{
             bottom: '2.5rem',
             right: '2rem',
@@ -92,7 +92,7 @@ export default function Hero({ id }: HeroProps) {
 
       {/* Scroll indicator — topo-ring with explore text */}
       <motion.div
-        className="absolute bottom-8 left-0 right-0 flex justify-center z-20"
+        className="absolute bottom-8 pb-[env(safe-area-inset-bottom)] left-0 right-0 flex justify-center z-20"
         initial={{ opacity: 0, scale: 0.6 }}
         animate={showArrow ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
