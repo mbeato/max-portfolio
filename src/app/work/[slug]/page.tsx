@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getCaseStudy, getAllSlugs } from '@/lib/case-studies';
 import CaseStudyHero from '@/components/case-study/CaseStudyHero';
 import CaseStudySection from '@/components/case-study/CaseStudySection';
+import CaseStudyNav from '@/components/case-study/CaseStudyNav';
 
 export function generateStaticParams(): { slug: string }[] {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -33,7 +34,9 @@ export default async function CaseStudyPage({
   if (!study) notFound();
 
   return (
-    <main className="max-w-[720px] mx-auto px-6 pt-24 pb-16">
+    <>
+      <CaseStudyNav />
+      <main className="max-w-[720px] mx-auto px-6 pt-24 pb-16">
       <CaseStudyHero study={study} />
       <CaseStudySection section={study.problem} />
       <CaseStudySection section={study.approach} />
@@ -45,6 +48,7 @@ export default async function CaseStudyPage({
       >
         back to home
       </Link>
-    </main>
+      </main>
+    </>
   );
 }
